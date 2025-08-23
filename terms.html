@@ -1,0 +1,117 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Terms of Service — RRD Collection</title>
+<meta name="description" content="RRD Collection terms of service and user agreement.">
+<link rel="icon" href="assets/img/logo.png"><link rel="stylesheet" href="assets/css/style.css">
+<script src="assets/js/data.js"></script><script src="assets/js/ui.js"></script><script src="assets/js/cart.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', ()=>{
+    const sel=document.getElementById('currencySel'); 
+    if(sel){ 
+      sel.value=currentCurrency(); 
+      sel.addEventListener('change', e=> setCurrency(e.target.value)); 
+    }
+    document.dispatchEvent(new Event('cart:updated'));
+    const cc=document.getElementById('cart-count'); 
+    if(cc) cc.textContent = cartCount();
+  });
+</script>
+</head><body>
+<header>
+  <div class="container header-inner">
+    <a class="brand" href="index.html"><img src="assets/img/logo.png" alt="RRD Collection logo"><strong>RRD Collection</strong></a>
+    <nav aria-label="primary">
+      <ul>
+        <li><a href="shop.html">Shop Perfumes</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="header-cart" onclick="toggleCart()">🛒 <span class="badge" id="cart-count">0</span></div>
+  </div>
+</header>
+<div id="cart-drawer" aria-label="Cart drawer">
+  <header><strong>Your Cart</strong><button class="btn secondary" onclick="toggleCart(false)">Close</button></header>
+  <div class="cart-items"></div>
+  <div class="cart-footer">
+    <div class="currency-switch">Currency: <select id="currencySel"><option>AED</option><option>INR</option><option>USD</option></select> </div>
+    <div class="cart-extras"></div>
+    <div>Subtotal: <span class="cart-subtotal">AED 0.00</span></div>
+    <button class="btn" onclick="checkoutWhatsApp()">Checkout via WhatsApp</button>
+    <button class="btn secondary" onclick="checkoutEmail()">Checkout via Email</button>
+  </div>
+</div>
+
+<main class="container">
+  <h1>Terms of Service</h1>
+  <p class="muted">Last updated: <span id="current-date"></span></p>
+  
+  <div style="max-width:800px;line-height:1.7">
+    <h2>Acceptance of Terms</h2>
+    <p>By accessing and using the RRD Collection website, you accept and agree to be bound by the terms and provision of this agreement.</p>
+    
+    <h2>Products and Services</h2>
+    <p>RRD Collection offers luxury fragrances and related products. All products are subject to availability and may be discontinued without notice.</p>
+    
+    <h2>Pricing and Payment</h2>
+    <p>All prices are listed in AED (UAE Dirham) and may be converted to other currencies for display purposes. Prices are subject to change without notice. Payment is accepted via COD (Cash on Delivery) and prepaid methods as confirmed with our agents.</p>
+    
+    <h2>Orders and Shipping</h2>
+    <p>Orders are processed upon confirmation via WhatsApp or email. We currently ship within India and UAE. Shipping times vary by location (typically 3-7 business days). Risk of loss and title for items pass to you upon delivery.</p>
+    
+    <h2>Returns and Refunds</h2>
+    <p>Returns are accepted for unopened bottles within 7 days of delivery. Contact us via WhatsApp or email to arrange returns. Refunds will be processed according to your original payment method.</p>
+    
+    <h2>Product Information</h2>
+    <p>While we strive to provide accurate product descriptions and images, we do not warrant that product descriptions, colors, information, or other content is accurate, complete, reliable, current, or error-free.</p>
+    
+    <h2>Intellectual Property</h2>
+    <p>All content on this website, including text, graphics, logos, images, and software, is the property of RRD Collection and is protected by copyright laws.</p>
+    
+    <h2>User Conduct</h2>
+    <p>You agree not to:</p>
+    <ul>
+      <li>Use the website for any unlawful purpose</li>
+      <li>Attempt to gain unauthorized access to our systems</li>
+      <li>Interfere with the proper working of the website</li>
+      <li>Submit false or misleading information</li>
+    </ul>
+    
+    <h2>Limitation of Liability</h2>
+    <p>RRD Collection shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of the website or products.</p>
+    
+    <h2>Privacy</h2>
+    <p>Your privacy is important to us. Please review our Privacy Policy, which also governs your use of the website.</p>
+    
+    <h2>Modifications</h2>
+    <p>We reserve the right to modify these terms at any time. Changes will be effective immediately upon posting. Your continued use of the website constitutes acceptance of the modified terms.</p>
+    
+    <h2>Governing Law</h2>
+    <p>These terms shall be governed by and construed in accordance with the laws of the United Arab Emirates.</p>
+    
+    <h2>Contact Information</h2>
+    <p>For questions about these Terms of Service, please contact us:</p>
+    <ul>
+      <li>Email: legal@rrd-collection.com</li>
+      <li>WhatsApp: +971 55 993 8295</li>
+    </ul>
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <p class="muted">A scent isn't just a smell — it's a signature. RRD Collection curates bold, mood‑defining fragrances for those who walk into the room already unforgettable.</p>
+    <small>© <span id="year"></span> RRD Collection. All rights reserved. | <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a></small>
+  </div>
+</footer>
+<div id="toast" aria-live="polite"></div>
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+  document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  });
+</script>
+</body></html> 

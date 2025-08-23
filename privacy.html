@@ -1,0 +1,126 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Privacy Policy — RRD Collection</title>
+<meta name="description" content="RRD Collection privacy policy and data protection information.">
+<link rel="icon" href="assets/img/logo.png"><link rel="stylesheet" href="assets/css/style.css">
+<script src="assets/js/data.js"></script><script src="assets/js/ui.js"></script><script src="assets/js/cart.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', ()=>{
+    const sel=document.getElementById('currencySel'); 
+    if(sel){ 
+      sel.value=currentCurrency(); 
+      sel.addEventListener('change', e=> setCurrency(e.target.value)); 
+    }
+    document.dispatchEvent(new Event('cart:updated'));
+    const cc=document.getElementById('cart-count'); 
+    if(cc) cc.textContent = cartCount();
+  });
+</script>
+</head><body>
+<header>
+  <div class="container header-inner">
+    <a class="brand" href="index.html"><img src="assets/img/logo.png" alt="RRD Collection logo"><strong>RRD Collection</strong></a>
+    <nav aria-label="primary">
+      <ul>
+        <li><a href="shop.html">Shop Perfumes</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="header-cart" onclick="toggleCart()">🛒 <span class="badge" id="cart-count">0</span></div>
+  </div>
+</header>
+<div id="cart-drawer" aria-label="Cart drawer">
+  <header><strong>Your Cart</strong><button class="btn secondary" onclick="toggleCart(false)">Close</button></header>
+  <div class="cart-items"></div>
+  <div class="cart-footer">
+    <div class="currency-switch">Currency: <select id="currencySel"><option>AED</option><option>INR</option><option>USD</option></select> </div>
+    <div class="cart-extras"></div>
+    <div>Subtotal: <span class="cart-subtotal">AED 0.00</span></div>
+    <button class="btn" onclick="checkoutWhatsApp()">Checkout via WhatsApp</button>
+    <button class="btn secondary" onclick="checkoutEmail()">Checkout via Email</button>
+  </div>
+</div>
+
+<main class="container">
+  <h1>Privacy Policy</h1>
+  <p class="muted">Last updated: <span id="current-date"></span></p>
+  
+  <div style="max-width:800px;line-height:1.7">
+    <h2>Information We Collect</h2>
+    <p>RRD Collection collects information you provide directly to us, such as when you:</p>
+    <ul>
+      <li>Place an order or make a purchase</li>
+      <li>Contact us for customer support</li>
+      <li>Subscribe to our newsletter</li>
+      <li>Participate in our scent finder quiz</li>
+    </ul>
+    
+    <h2>Types of Information</h2>
+    <p>We may collect the following types of information:</p>
+    <ul>
+      <li><strong>Personal Information:</strong> Name, email address, phone number, shipping address</li>
+      <li><strong>Order Information:</strong> Products purchased, payment details, shipping preferences</li>
+      <li><strong>Communication Data:</strong> Messages sent via WhatsApp, email, or contact forms</li>
+      <li><strong>Preferences:</strong> Fragrance preferences, quiz responses, newsletter subscriptions</li>
+    </ul>
+    
+    <h2>How We Use Your Information</h2>
+    <p>We use the information we collect to:</p>
+    <ul>
+      <li>Process and fulfill your orders</li>
+      <li>Provide customer support and respond to inquiries</li>
+      <li>Send order confirmations and shipping updates</li>
+      <li>Personalize your experience and recommend products</li>
+      <li>Send marketing communications (with your consent)</li>
+      <li>Improve our products and services</li>
+    </ul>
+    
+    <h2>Information Sharing</h2>
+    <p>We do not sell, trade, or rent your personal information to third parties. We may share your information only in the following circumstances:</p>
+    <ul>
+      <li>With shipping partners to fulfill your orders</li>
+      <li>With payment processors to complete transactions</li>
+      <li>When required by law or to protect our rights</li>
+      <li>With your explicit consent</li>
+    </ul>
+    
+    <h2>Data Security</h2>
+    <p>We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction.</p>
+    
+    <h2>Your Rights</h2>
+    <p>You have the right to:</p>
+    <ul>
+      <li>Access your personal information</li>
+      <li>Correct inaccurate information</li>
+      <li>Request deletion of your information</li>
+      <li>Opt-out of marketing communications</li>
+      <li>Withdraw consent at any time</li>
+    </ul>
+    
+    <h2>Contact Us</h2>
+    <p>If you have questions about this Privacy Policy or our data practices, please contact us:</p>
+    <ul>
+      <li>Email: privacy@rrd-collection.com</li>
+      <li>WhatsApp: +971 55 993 8295</li>
+    </ul>
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <p class="muted">A scent isn't just a smell — it's a signature. RRD Collection curates bold, mood‑defining fragrances for those who walk into the room already unforgettable.</p>
+    <small>© <span id="year"></span> RRD Collection. All rights reserved. | <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a></small>
+  </div>
+</footer>
+<div id="toast" aria-live="polite"></div>
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+  document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  });
+</script>
+</body></html> 

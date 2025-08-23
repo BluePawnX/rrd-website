@@ -1,0 +1,214 @@
+<!doctype html><html lang="en"><head> 
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"> 
+  <title>Shop Perfumes — RRD Collection</title> 
+  <meta name="description" content="Discover RRD Collection perfumes."> 
+  <link rel="icon" href="assets/img/logo.png"><link rel="stylesheet" href="assets/css/style.css"> 
+  <script src="assets/js/data.js"></script><script src="assets/js/ui.js"></script><script src="assets/js/cart.js"></script> 
+</head><body> 
+  <!-- header + cart drawer (from PROMPT 6) --> 
+  <header> 
+    <div class="container header-inner"> 
+      <a class="brand" href="index.html"><img src="assets/img/logo.png" alt="RRD Collection logo"><strong>RRD Collection</strong></a> 
+      <nav aria-label="primary"> 
+        <ul> 
+          <li><a href="shop.html">Shop Perfumes</a></li> 
+          <li><a href="about.html">About</a></li> 
+          <li><a href="faq.html">FAQ</a></li> 
+          <li><a href="contact.html">Contact</a></li> 
+        </ul> 
+      </nav> 
+      <div class="header-cart" onclick="toggleCart()">🛒 <span class="badge" id="cart-count">0</span></div> 
+    </div> 
+  </header> 
+  <div id="cart-drawer" aria-label="Cart drawer"> 
+    <header><strong>Your Cart</strong><button class="btn secondary" onclick="toggleCart(false)">Close</button></header> 
+    <div class="cart-items"></div> 
+    <div class="cart-footer"> 
+      <div class="currency-switch">Currency: <select id="currencySel"><option>AED</option><option>INR</option><option>USD</option></select> </div> 
+      <div class="cart-extras"></div> 
+      <div>Subtotal: <span class="cart-subtotal">AED 0.00</span></div> 
+      <button class="btn" onclick="checkoutWhatsApp()">Checkout via WhatsApp</button> 
+      <button class="btn secondary" onclick="checkoutEmail()">Checkout via Email</button> 
+    </div> 
+  </div> 
+  <script> 
+    document.addEventListener('DOMContentLoaded', ()=>{ 
+      const sel=document.getElementById('currencySel'); 
+      if(sel){ 
+        sel.value=currentCurrency(); 
+        sel.addEventListener('change', e=> setCurrency(e.target.value)); 
+      } 
+      document.dispatchEvent(new Event('cart:updated')); 
+      const cc=document.getElementById('cart-count'); 
+      if(cc) cc.textContent = cartCount(); 
+    }); 
+  </script> 
+
+<main class="container">
+  <h1>Shop Perfumes</h1>
+  
+  <!-- Enhanced Search and Filters -->
+  <div class="filters">
+    <h3>Find Your Perfect Fragrance</h3>
+    <div class="filter-group">
+      <div class="filter-item">
+        <label for="category-filter">Category:</label>
+        <select id="category-filter">
+          <option value="all">All Fragrances</option>
+          <option value="featured">Featured</option>
+          <option value="fresh">Fresh & Clean</option>
+          <option value="floral">Floral & Romantic</option>
+          <option value="oriental">Oriental & Spicy</option>
+        </select>
+      </div>
+      <div class="filter-item">
+        <label for="price-filter">Price Range:</label>
+        <select id="price-filter">
+          <option value="all">All Prices</option>
+          <option value="100-130">AED 100 - 130</option>
+          <option value="130-150">AED 130 - 150</option>
+          <option value="150+">AED 150+</option>
+        </select>
+      </div>
+      <div class="filter-item">
+        <label for="search">Search:</label>
+        <input id="search" placeholder="Search by name or note…" aria-label="search products">
+      </div>
+      <div class="filter-item">
+        <label for="currencyTop">Currency:</label>
+        <select id="currencyTop">
+          <option value="AED">AED</option>
+          <option value="INR">INR</option>
+          <option value="USD">USD</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid" id="shopGrid"></div>
+  <p id="emptyMsg" class="muted" style="display:none;margin-top:16px">No perfumes match your search.</p>
+</main>
+
+<!-- PDP Modal -->
+<div id="pdpModal" class="modal-backdrop" aria-hidden="true" style="position:fixed;inset:0;background:rgba(0,0,0,.55);display:none">
+  <div role="dialog" aria-modal="true" aria-labelledby="pdpTitle" class="modal" style="margin:auto;background:#111;border:1px solid rgba(255,255,255,.1);border-radius:16px;max-width:min(96vw,720px);width:100%;box-shadow:0 10px 30px rgba(0,0,0,.5)">
+    <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.07);padding:12px 14px">
+      <h3 id="pdpTitle" style="margin:0">Product</h3>
+      <button class="btn secondary" onclick="closeModal('#pdpModal')">Close</button>
+    </div>
+    <div id="pdpBody" style="display:grid;gap:14px;padding:14px"></div>
+  </div>
+</div>
+
+<script>
+  // show/hide backdrop via class toggle
+  const pdpBackdrop = document.getElementById('pdpModal');
+  const showBackdrop = (show)=>{ pdpBackdrop.style.display = show ? 'grid' : 'none'; };
+
+  // Card renderer
+  function card(p){
+    const rating = avgRating(p.id), count = reviewsCount(p.id);
+    return `
+      <article class="card" id="${p.id}">
+        <picture>
+          <source type="image/webp" srcset="${p.imageWebp}">
+          <img src="${p.image}" alt="${p.name} bottle">
+        </picture>
+        <div class="pad">
+          <h3>${p.name}</h3>
+          <div class="meta">${(p.notes||[]).slice(0,3).join(' • ')}</div>
+          <div class="meta">${renderStars(rating)} <span class="muted">(${count})</span></div>
+          <div class="price">${formatPrice(p.price)}</div>
+          <div class="actions">
+            <button class="btn" onclick="addToCart('${p.id}')">Add to cart</button>
+            <button class="btn secondary" onclick="openPDP('${p.id}')">Details</button>
+          </div>
+        </div>
+      </article>`;
+  }
+
+  function openPDP(id){
+    const p = PRODUCTS.find(x=>x.id===id); if(!p) return;
+    const rating = avgRating(id), count = reviewsCount(id);
+    const html = `
+      <div style="display:grid;gap:14px;grid-template-columns:1fr;align-items:start;padding:6px 12px">
+        <picture>
+          <source type="image/webp" srcset="${p.imageWebp}">
+          <img src="${p.image}" alt="${p.name} bottle" style="width:100%;border-radius:12px;background:#0f0f0f">
+        </picture>
+        <div>
+          <h2 id="pdpTitle" style="margin:.2rem 0 .6rem">${p.name}</h2>
+          <div class="meta">${renderStars(rating)} <span class="muted">(${count} reviews)</span></div>
+          <p class="muted" style="margin:.5rem 0 1rem">${p.description}</p>
+          <div class="meta"><strong>Notes:</strong> ${p.notes.join(' • ')}</div>
+          <div class="meta"><strong>Size:</strong> ${p.size}</div>
+          <div class="price" style="margin:10px 0">${formatPrice(p.price)}</div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="btn" onclick="addToCart('${p.id}')">Add to cart</button>
+            <button class="btn secondary" onclick="toggleCart(true)">Open cart</button>
+          </div>
+        </div>
+      </div>
+      <div style="border-top:1px solid rgba(255,255,255,.07);padding-top:10px">
+        <h4 style="margin:.2rem 0 .6rem">Reviews</h4>
+        ${(REVIEWS[id]||[]).map(r=>`<div class="meta" style="margin:.2rem 0">${renderStars(r.stars)} — ${r.text}</div>`).join('') || '<div class="muted">No reviews yet.</div>'}
+      </div>`;
+    document.getElementById('pdpBody').innerHTML = html;
+    showBackdrop(true); openModal('#pdpModal');
+  }
+
+  // Grid render + search
+  const grid = document.getElementById('shopGrid'), emptyMsg = document.getElementById('emptyMsg'), search = document.getElementById('search');
+  function render(){
+    const q = (search.value||'').toLowerCase();
+    const items = PRODUCTS.filter(p=> p.name.toLowerCase().includes(q) || (p.notes||[]).join(' ').toLowerCase().includes(q));
+    grid.innerHTML = items.map(card).join('');
+    emptyMsg.style.display = items.length? 'none':'block';
+  }
+  render(); search.addEventListener('input', render);
+
+  const sel=document.getElementById('currencyTop'); sel.value=currentCurrency(); sel.addEventListener('change', e=> setCurrency(e.target.value));
+  document.addEventListener('currency:changed', render);
+  document.addEventListener('cart:updated', ()=> (document.getElementById('cart-count').textContent = cartCount()));
+
+  // JSON-LD for all products
+  (function injectJSONLD(){
+    PRODUCTS.forEach(p=>{
+      const ld = {
+        "@context":"https://schema.org",
+        "@type":"Product",
+        "name": p.name,
+        "image": [ location.origin + '/' + (p.imageWebp || p.image) ],
+        "brand": {"@type":"Brand","name":"RRD Collection"},
+        "description": p.description,
+        "offers": {
+          "@type":"Offer",
+          "priceCurrency": "AED",
+          "price": String(p.price),
+          "availability": "https://schema.org/InStock",
+          "url": location.href.split('#')[0] + '#' + p.id
+        },
+        "aggregateRating": (reviewsCount(p.id) ? {"@type":"AggregateRating","ratingValue": String(avgRating(p.id)), "reviewCount": String(reviewsCount(p.id))} : undefined)
+      };
+      const s = document.createElement('script');
+      s.type = 'application/ld+json';
+      s.textContent = JSON.stringify(ld);
+      document.body.appendChild(s);
+    });
+  })();
+
+  // Backdrop visibility toggle hook
+  const _open = openModal; openModal = function(id){ document.querySelector(id).style.display='grid'; _open(id); };
+  const _close = closeModal; closeModal = function(id){ document.querySelector(typeof id==='string'?id:'#pdpModal').style.display='none'; _close(id); };
+</script>
+
+  <!-- footer --> 
+  <footer> 
+    <div class="container"> 
+      <p class="muted">A scent isn't just a smell — it's a signature. RRD Collection curates bold, mood‑defining fragrances for those who walk into the room already unforgettable.</p> 
+      <small>© <span id="year"></span> RRD Collection. All rights reserved.</small> 
+    </div> 
+  </footer> 
+  <div id="toast" aria-live="polite"></div> 
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script> 
+</body></html> 

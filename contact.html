@@ -1,0 +1,69 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Contact — RRD Collection</title>
+<meta name="description" content="Chat with RRD Collection for recommendations or orders.">
+<link rel="icon" href="assets/img/logo.png"><link rel="stylesheet" href="assets/css/style.css">
+<script src="assets/js/data.js"></script><script src="assets/js/ui.js"></script><script src="assets/js/cart.js"></script>
+<script>
+  // Initialize currency selector
+  document.addEventListener('DOMContentLoaded', ()=>{
+    const sel=document.getElementById('currencySel'); 
+    if(sel){ 
+      sel.value=currentCurrency(); 
+      sel.addEventListener('change', e=> setCurrency(e.target.value)); 
+    }
+    document.dispatchEvent(new Event('cart:updated'));
+    const cc=document.getElementById('cart-count'); 
+    if(cc) cc.textContent = cartCount();
+  });
+</script>
+</head><body>
+<header>
+  <div class="container header-inner">
+    <a class="brand" href="index.html"><img src="assets/img/logo.png" alt="RRD Collection logo"><strong>RRD Collection</strong></a>
+    <nav aria-label="primary">
+      <ul>
+        <li><a href="shop.html">Shop Perfumes</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="header-cart" onclick="toggleCart()">🛒 <span class="badge" id="cart-count">0</span></div>
+  </div>
+</header>
+<div id="cart-drawer" aria-label="Cart drawer">
+  <header><strong>Your Cart</strong><button class="btn secondary" onclick="toggleCart(false)">Close</button></header>
+  <div class="cart-items"></div>
+  <div class="cart-footer">
+    <div class="currency-switch">Currency:
+      <select id="currencySel"><option>AED</option><option>INR</option><option>USD</option></select>
+    </div>
+    <div class="cart-extras"></div>
+    <div>Subtotal: <span class="cart-subtotal">AED 0.00</span></div>
+    <button class="btn" onclick="checkoutWhatsApp()">Checkout via WhatsApp</button>
+    <button class="btn secondary" onclick="checkoutEmail()">Checkout via Email</button>
+  </div>
+</div>
+
+<main class="container">
+  <h1>Contact</h1>
+  <p class="muted">Chat with us for recommendations or order support.</p>
+  <form onsubmit="event.preventDefault(); try { toast('Thanks! We will reach out.'); window.location.href='mailto:sales@rrd-collection.com?subject=Inquiry%20—%20RRD%20Collection&body=' + encodeURIComponent(document.getElementById('msg').value); } catch (error) { console.error('Error submitting form:', error); toast('Error submitting form'); }">
+    <input id="name" placeholder="Your name" required>
+    <input id="email" type="email" placeholder="Email" required>
+    <textarea id="msg" rows="5" placeholder="How can we help?" required></textarea>
+    <button class="btn">Send Email</button>
+    <a class="btn secondary" href="https://wa.me/971559938295" target="_blank" rel="noopener">Chat on WhatsApp</a>
+  </form>
+</main>
+
+<footer>
+  <div class="container">
+    <p class="muted">A scent isn't just a smell — it's a signature. RRD Collection curates bold, mood‑defining fragrances for those who walk into the room already unforgettable.</p>
+    <small>© <span id="year"></span> RRD Collection. All rights reserved.</small>
+  </div>
+</footer>
+<div id="toast" aria-live="polite"></div>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body></html> 

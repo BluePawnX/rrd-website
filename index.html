@@ -1,0 +1,223 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Home — RRD Collection</title>
+<meta name="description" content="RRD Collection curates bold, mood‑defining fragrances.">
+<link rel="icon" href="assets/img/logo.png"><link rel="stylesheet" href="assets/css/style.css">
+<script src="assets/js/data.js"></script><script src="assets/js/ui.js"></script><script src="assets/js/cart.js"></script>
+</head><body>
+<header>
+  <div class="container header-inner">
+    <a class="brand" href="index.html"><img src="assets/img/logo.png" alt="RRD Collection logo"><strong>RRD Collection</strong></a>
+    <nav aria-label="primary">
+      <ul>
+        <li><a href="shop.html">Shop Perfumes</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="header-cart" onclick="toggleCart()">🛒 <span class="badge" id="cart-count">0</span></div>
+  </div>
+</header>
+<div id="cart-drawer" aria-label="Cart drawer">
+  <header><strong>Your Cart</strong><button class="btn secondary" onclick="toggleCart(false)">Close</button></header>
+  <div class="cart-items"></div>
+  <div class="cart-footer">
+    <div class="currency-switch">Currency:
+      <select id="currencySel"><option>AED</option><option>INR</option><option>USD</option></select>
+    </div>
+    <div class="cart-extras"></div>
+    <div>Subtotal: <span class="cart-subtotal">AED 0.00</span></div>
+    <button class="btn" onclick="checkoutWhatsApp()">Checkout via WhatsApp</button>
+    <button class="btn secondary" onclick="checkoutEmail()">Checkout via Email</button>
+  </div>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', ()=>{
+    const sel=document.getElementById('currencySel'); 
+    if(sel){ 
+      sel.value=currentCurrency(); 
+      sel.addEventListener('change', e=> setCurrency(e.target.value)); 
+    }
+    document.dispatchEvent(new Event('cart:updated'));
+    const cc=document.getElementById('cart-count'); 
+    if(cc) cc.textContent = cartCount();
+  });
+</script>
+
+<main>
+  <section class="hero">
+    <div class="container"><div class="copy">
+      <h1>RRD Collection</h1>
+      <p>A scent isn't just a smell — it's a signature. RRD Collection curates bold, mood‑defining fragrances for those who walk into the room already unforgettable.</p>
+      <p><a class="btn" href="shop.html">Shop Perfumes</a></p>
+    </div></div>
+  </section>
+  
+  <section class="container">
+    <h2>Bestsellers</h2>
+    <div class="grid" id="bestGrid"></div>
+  </section>
+
+  <!-- Bundles Section -->
+  <section class="bundles">
+    <div class="container">
+      <h2>Curated Duos</h2>
+      <p style="text-align:center;color:var(--muted);margin-bottom:32px">Save on perfectly paired fragrances</p>
+      <div class="grid">
+        <div class="bundle-card">
+          <h3>Fresh & Clean Duo</h3>
+          <p>Perfect for daily wear - crisp citrus meets clean amber</p>
+          <div class="price">AED 249</div>
+          <div class="savings">Save AED 19</div>
+          <button class="btn" onclick="addBundleToCart('fresh-duo')">Add Duo to Cart</button>
+        </div>
+        <div class="bundle-card">
+          <h3>Romance Collection</h3>
+          <p>Floral romance for special occasions</p>
+          <div class="price">AED 259</div>
+          <div class="savings">Save AED 15</div>
+          <button class="btn" onclick="addBundleToCart('romance-duo')">Add Duo to Cart</button>
+        </div>
+        <div class="bundle-card">
+          <h3>Luxury Oriental Duo</h3>
+          <p>Opulent oud and regal rose for unforgettable moments</p>
+          <div class="price">AED 289</div>
+          <div class="savings">Save AED 15</div>
+          <button class="btn" onclick="addBundleToCart('luxury-duo')">Add Duo to Cart</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quiz Section -->
+  <section class="quiz">
+    <div class="container">
+      <h2>Find Your Perfect Scent</h2>
+      <p style="text-align:center;color:var(--muted);margin-bottom:32px">Take our quick quiz to discover your ideal fragrance</p>
+      
+      <div class="quiz-step active">
+        <h3>What's your preferred scent intensity?</h3>
+        <div class="quiz-options">
+          <div class="quiz-option" data-value="light">
+            <h4>Light & Subtle</h4>
+            <p>Gentle, close-to-skin fragrances</p>
+          </div>
+          <div class="quiz-option" data-value="medium">
+            <h4>Balanced</h4>
+            <p>Moderate projection, noticeable but not overwhelming</p>
+          </div>
+          <div class="quiz-option" data-value="strong">
+            <h4>Bold & Memorable</h4>
+            <p>Strong presence, makes an entrance</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="quiz-step">
+        <h3>When do you plan to wear this fragrance?</h3>
+        <div class="quiz-options">
+          <div class="quiz-option" data-value="daily">
+            <h4>Daily Wear</h4>
+            <p>Office, casual outings, everyday use</p>
+          </div>
+          <div class="quiz-option" data-value="evening">
+            <h4>Evening & Events</h4>
+            <p>Dinner dates, parties, special occasions</p>
+          </div>
+          <div class="quiz-option" data-value="both">
+            <h4>Versatile</h4>
+            <p>Works for both day and evening</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="quiz-step">
+        <h3>What's your preferred fragrance family?</h3>
+        <div class="quiz-options">
+          <div class="quiz-option" data-value="fresh">
+            <h4>Fresh & Clean</h4>
+            <p>Citrus, aquatic, clean notes</p>
+          </div>
+          <div class="quiz-option" data-value="floral">
+            <h4>Floral & Romantic</h4>
+            <p>Rose, jasmine, romantic blooms</p>
+          </div>
+          <div class="quiz-option" data-value="oriental">
+            <h4>Oriental & Spicy</h4>
+            <p>Amber, oud, warm spices</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter Section -->
+  <section class="newsletter">
+    <div class="container">
+      <h2>Stay in the Loop</h2>
+      <p>Be the first to know about new fragrances, exclusive offers, and fragrance tips</p>
+      <form onsubmit="event.preventDefault(); handleNewsletterSubmit(event)">
+        <input type="email" placeholder="Enter your email address" required>
+        <button type="submit" class="btn">Subscribe</button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<!-- Floating WhatsApp Button -->
+<div class="floating-whatsapp">
+  <a href="https://wa.me/971559938295" target="_blank" rel="noopener" class="btn" aria-label="Chat on WhatsApp">
+    💬
+  </a>
+</div>
+
+<script>
+  function card(p){ 
+    return `<article class="card">
+      <picture>
+        <source type="image/webp" srcset="${p.imageWebp}">
+        <img src="${p.image}" alt="${p.name} bottle">
+      </picture>
+      <div class="pad">
+        <h3>${p.name}</h3>
+        <div class="meta">${(p.notes||[]).slice(0,3).join(' • ')}</div>
+        <div class="meta">${renderStars(avgRating(p.id))} <span class="muted">(${reviewsCount(p.id)})</span></div>
+        <div class="price">${formatPrice(p.price)}</div>
+        <div class="actions"><button class="btn" onclick="addToCart('${p.id}')">Add to cart</button></div>
+      </div>
+    </article>`; }
+  try {
+    document.getElementById('bestGrid').innerHTML = PRODUCTS.filter(p=>p.featured).map(card).join('');
+  } catch (error) {
+    console.error('Error loading bestsellers:', error);
+    document.getElementById('bestGrid').innerHTML = '<p class="muted">Error loading bestsellers</p>';
+  }
+  document.addEventListener('cart:updated', ()=> (document.getElementById('cart-count').textContent = cartCount()));
+  
+  // Initialize UI components
+  document.addEventListener('DOMContentLoaded', ()=>{
+    const sel=document.getElementById('currencySel'); 
+    if(sel){ 
+      sel.value=currentCurrency(); 
+      sel.addEventListener('change', e=> setCurrency(e.target.value)); 
+    }
+    document.dispatchEvent(new Event('cart:updated'));
+    const cc=document.getElementById('cart-count'); 
+    if(cc) cc.textContent = cartCount();
+    
+    // Initialize quiz and newsletter
+    initQuiz();
+    initNewsletter();
+  });
+</script>
+
+<footer>
+  <div class="container">
+    <p class="muted">A scent isn't just a smell — it's a signature. RRD Collection curates bold, mood‑defining fragrances for those who walk into the room already unforgettable.</p>
+    <small>© <span id="year"></span> RRD Collection. All rights reserved.</small>
+  </div>
+</footer>
+<div id="toast" aria-live="polite"></div>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body></html> 
