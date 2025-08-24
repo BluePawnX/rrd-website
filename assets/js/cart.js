@@ -1,19 +1,28 @@
 // assets/js/cart.js
+// ============================================================================
+// RRD Collection - Shopping Cart Management
+// ============================================================================
+
+// Configuration
 const GIFT_WRAP_FEE_AED = 10;
 
-function getCart(){
+// ============================================================================
+// CART STORAGE & RETRIEVAL
+// ============================================================================
+
+function getCart() {
   try {
-    const c = JSON.parse(localStorage.getItem('rrd_cart_v1')) || {items:[], currency: currentCurrency()};
-    if(typeof c.giftWrap === 'undefined') c.giftWrap = false;
-    if(typeof c.giftMessage === 'undefined') c.giftMessage = '';
+    const c = JSON.parse(localStorage.getItem('rrd_cart_v1')) || { items: [], currency: currentCurrency() };
+    if (typeof c.giftWrap === 'undefined') c.giftWrap = false;
+    if (typeof c.giftMessage === 'undefined') c.giftMessage = '';
     return c;
   } catch (error) {
     console.error('Error reading cart from localStorage:', error);
-    return {items:[], currency: currentCurrency(), giftWrap:false, giftMessage:''};
+    return { items: [], currency: currentCurrency(), giftWrap: false, giftMessage: '' };
   }
 }
 
-function saveCart(c){
+function saveCart(c) {
   try {
     localStorage.setItem('rrd_cart_v1', JSON.stringify(c));
     document.dispatchEvent(new CustomEvent('cart:updated'));
@@ -23,7 +32,11 @@ function saveCart(c){
   }
 }
 
-function addToCart(id, qty=1){
+// ============================================================================
+// CART OPERATIONS
+// ============================================================================
+
+function addToCart(id, qty = 1) {
   try {
     if (!id) {
       console.warn('addToCart called without product ID');
@@ -36,7 +49,7 @@ function addToCart(id, qty=1){
     if (it) {
       it.qty = Math.min(10, it.qty + qty);
     } else {
-      c.items.push({id, qty: Math.min(10, qty)});
+      c.items.push({ id, qty: Math.min(10, qty) });
     }
     
     saveCart(c);
@@ -53,7 +66,7 @@ function addToCart(id, qty=1){
   }
 }
 
-function removeFromCart(id){
+function removeFromCart(id) {
   try {
     if (!id) return;
     
@@ -67,7 +80,7 @@ function removeFromCart(id){
   }
 }
 
-function updateQty(id, qty){
+function updateQty(id, qty) {
   try {
     if (!id) return;
     
@@ -84,6 +97,10 @@ function updateQty(id, qty){
     toast('Error updating quantity', 'error');
   }
 }
+
+// ============================================================================
+// CART CALCULATIONS
+// ============================================================================
 
 const cartCount = () => {
   try {
@@ -111,7 +128,11 @@ const cartTotalAED = () => {
   }
 };
 
-function renderCartDrawer(){
+// ============================================================================
+// CART UI RENDERING
+// ============================================================================
+
+function renderCartDrawer() {
   try {
     const d = qs('#cart-drawer');
     if (!d) {
@@ -215,11 +236,11 @@ function renderCartDrawer(){
   }
 }
 
-// Event listeners
-document.addEventListener('cart:updated', renderCartDrawer);
-document.addEventListener('currency:changed', renderCartDrawer);
+// ============================================================================
+// CART INTERFACE
+// ============================================================================
 
-function toggleCart(open){
+function toggleCart(open) {
   try {
     const d = qs('#cart-drawer');
     if (!d) {
@@ -238,7 +259,11 @@ function toggleCart(open){
   }
 }
 
-function buildOrderSummary(){
+// ============================================================================
+// CHECKOUT FUNCTIONS
+// ============================================================================
+
+function buildOrderSummary() {
   try {
     const c = getCart();
     
@@ -264,7 +289,7 @@ function buildOrderSummary(){
   }
 }
 
-function checkoutWhatsApp(){
+function checkoutWhatsApp() {
   try {
     if (cartCount() === 0) {
       toast('Cart is empty', 'error');
@@ -287,7 +312,7 @@ function checkoutWhatsApp(){
   }
 }
 
-function checkoutEmail(){
+function checkoutEmail() {
   try {
     if (cartCount() === 0) {
       toast('Cart is empty', 'error');
@@ -310,223 +335,28 @@ function checkoutEmail(){
   }
 }
 
-// Legacy class-based cart (for backward compatibility)
-class ShoppingCart {
-    constructor() {
-        this.items = getCart().items;
-        this.total = cartTotalAED();
-        this.currentCurrency = currentCurrency();
-    }
+// ============================================================================
+// EVENT LISTENERS
+// ============================================================================
 
-    addItem(product) {
-        addToCart(product.id, 1);
-    }
+document.addEventListener('cart:updated', renderCartDrawer);
+document.addEventListener('currency:changed', renderCartDrawer);
 
-    removeItem(itemId) {
-        removeFromCart(itemId);
-    }
+// ============================================================================
+// GLOBAL EXPORTS (for backward compatibility)
+// ============================================================================
 
-    increaseQuantity(itemId) {
-        const item = this.items.find(item => item.id === itemId);
-        if (item) {
-            updateQty(itemId, item.qty + 1);
-        }
-    }
-
-    decreaseQuantity(itemId) {
-        const item = this.items.find(item => item.id === itemId);
-        if (item && item.qty > 1) {
-            updateQty(itemId, item.qty - 1);
-        } else if (item && item.qty === 1) {
-            removeFromCart(itemId);
-        }
-    }
-
-    clearCart() {
-        saveCart({items: [], currency: currentCurrency()});
-        toast('Cart cleared!');
-    }
-
-    getCartItems() {
-        return getCart().items;
-    }
-
-    getCartTotal() {
-        return cartTotalAED();
-    }
-
-    formatPrice(price) {
-        return formatPrice(price, this.currentCurrency);
-    }
-}
-
-// Product catalog functionality (simplified)
-class ProductCatalog {
-    constructor() {
-        this.products = PRODUCTS || [];
-        this.filteredProducts = [...this.products];
-        this.currentPage = 1;
-        this.productsPerPage = 12;
-        this.currentCurrency = currentCurrency();
-        this.init();
-    }
-
-    init() {
-        this.bindEvents();
-        this.renderProducts();
-    }
-
-    bindEvents() {
-        // Filter functionality
-        const categoryFilter = qs('#category-filter');
-        const priceFilter = qs('#price-filter');
-
-        if (categoryFilter) {
-            categoryFilter.addEventListener('change', () => this.applyFilters());
-        }
-
-        if (priceFilter) {
-            priceFilter.addEventListener('change', () => this.applyFilters());
-        }
-
-        // Pagination
-        const prevBtn = qs('#prev-page');
-        const nextBtn = qs('#next-page');
-
-        if (prevBtn) {
-            prevBtn.addEventListener('click', () => this.previousPage());
-        }
-
-        if (nextBtn) {
-            nextBtn.addEventListener('click', () => this.nextPage());
-        }
-    }
-
-    applyFilters() {
-        const categoryFilter = qs('#category-filter');
-        const priceFilter = qs('#price-filter');
-
-        let filtered = [...this.products];
-
-        // Category filter
-        if (categoryFilter && categoryFilter.value) {
-            if (categoryFilter.value === 'featured') {
-                filtered = filtered.filter(product => product.featured);
-            } else {
-                // For other categories, you can add specific logic
-                filtered = filtered.filter(product => product.category === categoryFilter.value);
-            }
-        }
-
-        // Price filter
-        if (priceFilter && priceFilter.value) {
-            const [min, max] = priceFilter.value.split('-').map(Number);
-            filtered = filtered.filter(product => {
-                const convertedPrice = convertPrice(product.price, this.currentCurrency);
-                if (max) {
-                    return convertedPrice >= min && convertedPrice <= max;
-                } else {
-                    return convertedPrice >= min;
-                }
-            });
-        }
-
-        this.filteredProducts = filtered;
-        this.currentPage = 1;
-        this.renderProducts();
-    }
-
-    renderProducts() {
-        const container = qs('#products-container');
-        if (!container) return;
-
-        const startIndex = (this.currentPage - 1) * this.productsPerPage;
-        const endIndex = startIndex + this.productsPerPage;
-        const productsToShow = this.filteredProducts.slice(startIndex, endIndex);
-
-        if (productsToShow.length === 0) {
-            container.innerHTML = '<p class="no-products">No fragrances found matching your criteria.</p>';
-            return;
-        }
-
-        const productsHTML = productsToShow.map(product => {
-            const formattedPrice = formatPrice(product.price, this.currentCurrency);
-            
-            return `
-                <div class="card">
-                    <img src="${product.image}" alt="${product.name}" onerror="this.src='assets/img/placeholder.jpg'">
-                    <div class="pad">
-                        <h3>${product.name}</h3>
-                        <div class="meta">${product.description}</div>
-                        <div class="meta">Size: ${product.size}</div>
-                        <div class="meta">Notes: ${product.notes.join(', ')}</div>
-                        <div class="price">${formattedPrice}</div>
-                        <div class="actions">
-                            <button class="btn" onclick="addToCart('${product.id}')">Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-
-        container.innerHTML = productsHTML;
-        this.updatePagination();
-    }
-
-    updatePagination() {
-        const totalPages = Math.ceil(this.filteredProducts.length / this.productsPerPage);
-        const currentPageEl = qs('#current-page');
-        const totalPagesEl = qs('#total-pages');
-        const prevBtn = qs('#prev-page');
-        const nextBtn = qs('#next-page');
-
-        if (currentPageEl) currentPageEl.textContent = this.currentPage;
-        if (totalPagesEl) totalPagesEl.textContent = totalPages;
-        if (prevBtn) prevBtn.disabled = this.currentPage === 1;
-        if (nextBtn) nextBtn.disabled = this.currentPage === totalPages;
-    }
-
-    previousPage() {
-        if (this.currentPage > 1) {
-            this.currentPage--;
-            this.renderProducts();
-        }
-    }
-
-    nextPage() {
-        const totalPages = Math.ceil(this.filteredProducts.length / this.productsPerPage);
-        if (this.currentPage < totalPages) {
-            this.currentPage++;
-            this.renderProducts();
-        }
-    }
-}
-
-// Initialize cart and catalog when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    window.cart = new ShoppingCart();
-    window.productCatalog = new ProductCatalog();
-    
-    // Initialize cart drawer
-    renderCartDrawer();
-});
-
-// Export for use in other modules
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { 
-        ShoppingCart, 
-        ProductCatalog,
-        getCart,
-        saveCart,
-        addToCart,
-        removeFromCart,
-        updateQty,
-        cartCount,
-        cartTotalAED,
-        renderCartDrawer,
-        toggleCart,
-        buildOrderSummary,
-        checkoutWhatsApp,
-        checkoutEmail
-    };
-} 
+window.Cart = {
+  getCart,
+  saveCart,
+  addToCart,
+  removeFromCart,
+  updateQty,
+  cartCount,
+  cartTotalAED,
+  renderCartDrawer,
+  toggleCart,
+  buildOrderSummary,
+  checkoutWhatsApp,
+  checkoutEmail
+}; 

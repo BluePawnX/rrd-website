@@ -1,66 +1,101 @@
 // assets/js/ui.js
-const qs  = (s, sc=document)=>sc.querySelector(s);
-const qsa = (s, sc=document)=>Array.from(sc.querySelectorAll(s));
+// ============================================================================
+// RRD Collection - UI Utilities & Components
+// ============================================================================
 
-function setCurrency(cur){
+// Quick DOM Selectors
+const qs  = (s, sc=document) => sc.querySelector(s);
+const qsa = (s, sc=document) => Array.from(sc.querySelectorAll(s));
+
+// ============================================================================
+// CURRENCY MANAGEMENT
+// ============================================================================
+
+function setCurrency(cur) {
   localStorage.setItem("rrd_currency", cur);
-  document.dispatchEvent(new CustomEvent("currency:changed", { detail:{currency:cur} }));
+  document.dispatchEvent(new CustomEvent("currency:changed", { detail: { currency: cur } }));
 }
-function currentCurrency(){ return localStorage.getItem("rrd_currency") || DEFAULT_CURRENCY || "AED"; }
+
+function currentCurrency() { 
+  return localStorage.getItem("rrd_currency") || DEFAULT_CURRENCY || "AED"; 
+}
+
 const convertPrice = (aed, to=currentCurrency()) => (aed / RATES.AED) * (RATES[to] || 1);
 const formatPrice  = (aed, cur=currentCurrency()) => `${CURRENCY_SYMBOLS[cur]} ${convertPrice(aed, cur).toFixed(2)}`;
 
-function toast(msg, type = 'info'){
+// ============================================================================
+// NOTIFICATIONS & FEEDBACK
+// ============================================================================
+
+function toast(msg, type = 'info') {
   try {
     let t = qs('#toast');
-    if(!t){ 
-      t = Object.assign(document.createElement('div'), { id:'toast' }); 
-      t.setAttribute('role','status'); 
-      t.setAttribute('aria-live','polite'); 
+    if (!t) { 
+      t = Object.assign(document.createElement('div'), { id: 'toast' }); 
+      t.setAttribute('role', 'status'); 
+      t.setAttribute('aria-live', 'polite'); 
       document.body.appendChild(t); 
     }
     t.textContent = msg; 
     t.className = `show ${type}`; 
-    setTimeout(()=> t.className = '', 3000);
+    setTimeout(() => t.className = '', 3000);
   } catch (error) {
     console.error('Error showing toast:', error);
     alert(msg); // Fallback
   }
 }
 
-// ★★★★☆ renderer
-function renderStars(r){
+// ============================================================================
+// STAR RATING SYSTEM
+// ============================================================================
+
+function renderStars(r) {
   const full = Math.floor(r), half = r - full >= .5;
   let out = '★'.repeat(full);
-  if(half) out += '☆'; // simple half placeholder; keep typography minimal
+  if (half) out += '☆'; // simple half placeholder; keep typography minimal
   out = out.padEnd(5, '☆');
   return `<span aria-label="${r} out of 5 stars" title="${r}/5">${out}</span>`;
 }
 
-// Modal util with focus trap
+// ============================================================================
+// MODAL SYSTEM
+// ============================================================================
+
 let __activeModal = null, __lastFocused = null;
-function openModal(id){
+
+function openModal(id) {
   const m = qs(id);
-  if(!m) return;
+  if (!m) return;
   __lastFocused = document.activeElement;
   m.classList.add('open');
-  m.setAttribute('aria-hidden','false');
+  m.setAttribute('aria-hidden', 'false');
   __activeModal = m;
   const focusables = qsa('a,button,input,textarea,select,[tabindex]:not([tabindex="-1"])', m);
-  (focusables[0]||m).focus();
+  (focusables[0] || m).focus();
 }
-function closeModal(id){
-  const m = typeof id === 'string' ? qs(id) : __activeModal;
-  if(!m) return;
-  m.classList.remove('open');
-  m.setAttribute('aria-hidden','true');
-  __activeModal = null;
-  (__lastFocused||document.body).focus();
-}
-document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && __activeModal) closeModal(__activeModal); });
-document.addEventListener('click', (e)=>{ if(__activeModal && e.target.classList.contains('modal-backdrop')) closeModal(__activeModal); });
 
-// Enhanced form validation
+function closeModal(id) {
+  const m = typeof id === 'string' ? qs(id) : __activeModal;
+  if (!m) return;
+  m.classList.remove('open');
+  m.setAttribute('aria-hidden', 'true');
+  __activeModal = null;
+  (__lastFocused || document.body).focus();
+}
+
+// Modal event listeners
+document.addEventListener('keydown', (e) => { 
+  if (e.key === 'Escape' && __activeModal) closeModal(__activeModal); 
+});
+
+document.addEventListener('click', (e) => { 
+  if (__activeModal && e.target.classList.contains('modal-backdrop')) closeModal(__activeModal); 
+});
+
+// ============================================================================
+// FORM VALIDATION
+// ============================================================================
+
 function validateForm(form) {
   const inputs = form.querySelectorAll('input[required], textarea[required]');
   let isValid = true;
@@ -109,7 +144,10 @@ function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-// Quiz functionality
+// ============================================================================
+// QUIZ SYSTEM
+// ============================================================================
+
 let quizAnswers = {};
 let currentQuizStep = 1;
 
@@ -229,7 +267,10 @@ function bindQuizEvents() {
   });
 }
 
-// Newsletter functionality
+// ============================================================================
+// NEWSLETTER SYSTEM
+// ============================================================================
+
 function initNewsletter() {
   const form = qs('.newsletter form');
   if (!form) return;
@@ -284,7 +325,10 @@ async function handleNewsletterSubmit(e) {
   }
 }
 
-// Enhanced search and filtering
+// ============================================================================
+// SEARCH & FILTERING
+// ============================================================================
+
 function initSearchAndFilters() {
   const searchInput = qs('#search');
   const categoryFilter = qs('#category-filter');
@@ -364,7 +408,10 @@ function renderFilteredProducts(products) {
   `).join('');
 }
 
-// Utility functions
+// ============================================================================
+// UTILITY FUNCTIONS
+// ============================================================================
+
 function debounce(func, wait) {
   let timeout;
   return function executedFunction(...args) {
@@ -388,36 +435,90 @@ function addBundleToCart(bundleId) {
   toast(`Added ${bundle.name} to cart!`, 'success');
 }
 
-// Initialize all UI components
+// ============================================================================
+// MOBILE NAVIGATION
+// ============================================================================
+
+function toggleMobileNav() {
+  const nav = qs('#main-nav');
+  const toggle = qs('.mobile-nav-toggle');
+  
+  if (!nav || !toggle) return;
+  
+  const isOpen = nav.classList.contains('open');
+  
+  if (isOpen) {
+    nav.classList.remove('open');
+    toggle.classList.remove('open');
+    toggle.setAttribute('aria-expanded', 'false');
+  } else {
+    nav.classList.add('open');
+    toggle.classList.add('open');
+    toggle.setAttribute('aria-expanded', 'true');
+  }
+}
+
+// Close mobile nav when clicking outside
+document.addEventListener('click', (e) => {
+  const nav = qs('#main-nav');
+  const toggle = qs('.mobile-nav-toggle');
+  
+  if (nav && nav.classList.contains('open') && 
+      !nav.contains(e.target) && 
+      !toggle.contains(e.target)) {
+    nav.classList.remove('open');
+    toggle.classList.remove('open');
+    toggle.setAttribute('aria-expanded', 'false');
+  }
+});
+
+// ============================================================================
+// INITIALIZATION
+// ============================================================================
+
 function initUI() {
   initQuiz();
   initNewsletter();
   initSearchAndFilters();
-  
-  // Initialize existing components
-  if (typeof initFAQ === 'function') initFAQ();
-  if (typeof initSmoothScroll === 'function') initSmoothScroll();
-  if (typeof initLazyLoading === 'function') initLazyLoading();
-  if (typeof initCurrencyListeners === 'function') initCurrencyListeners();
 }
 
-// Export functions for use in other modules
-window.UI = {
-    qs,
-    qsa,
-    setCurrency,
-    currentCurrency,
-    convertPrice,
-    formatPrice,
-    toast,
-    toggleMobileNav,
-    initFAQ,
-    validateForm,
-    initSmoothScroll,
-    initLazyLoading,
-    initCurrencyListeners,
-    initUI
-};
-
 // Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', initUI); 
+document.addEventListener('DOMContentLoaded', initUI);
+
+// ============================================================================
+// GLOBAL EXPORTS (for backward compatibility)
+// ============================================================================
+
+window.UI = {
+  qs,
+  qsa,
+  setCurrency,
+  currentCurrency,
+  convertPrice,
+  formatPrice,
+  toast,
+  renderStars,
+  openModal,
+  closeModal,
+  validateForm,
+  showFieldError,
+  clearFieldError,
+  isValidEmail,
+  initQuiz,
+  showQuizStep,
+  renderQuizOptions,
+  selectQuizOption,
+  showQuizResults,
+  resetQuiz,
+  bindQuizEvents,
+  initNewsletter,
+  handleNewsletterSubmit,
+  initSearchAndFilters,
+  handleSearch,
+  handleFilters,
+  renderFilteredProducts,
+  debounce,
+  addBundleToCart,
+  toggleMobileNav,
+  initUI
+}; 

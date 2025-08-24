@@ -1,8 +1,14 @@
 // assets/js/data.js
+// ============================================================================
+// RRD Collection - Product Data & Configuration
+// ============================================================================
+
+// Currency Configuration
 const CURRENCY_SYMBOLS = { AED: "AED", INR: "₹", USD: "$" };
 const RATES = { AED: 1, INR: 22.6, USD: 0.27 }; // approx static conversions from AED
 const DEFAULT_CURRENCY = localStorage.getItem("rrd_currency") || "AED";
 
+// Product Catalog
 const PRODUCTS = [
   { id:"bol", name:"Breath of Life",  price:149, size:"100 ml", notes:["Citrus Zest","Amberwood","Musk"], image:"assets/img/bottles/breath-of-life.png", imageWebp:"assets/img/bottles/breath-of-life.webp", featured:true, description:"A clean, invigorating signature with a confident amber‑musk trail.", category:"fresh", intensity:"medium", longevity:"8-10 hours" },
   { id:"dvs", name:"Divine Sensation",price:139, size:"100 ml", notes:["Rose","Raspberry","Vanilla"],     image:"assets/img/bottles/divine-sensation.png", imageWebp:"assets/img/bottles/divine-sensation.webp", featured:true, description:"Lush florals wrapped in gourmand warmth—made for entrances.", category:"floral", intensity:"strong", longevity:"10-12 hours" },
@@ -14,7 +20,7 @@ const PRODUCTS = [
   { id:"acf", name:"Acqua Di Fruity", price:119, size:"100 ml", notes:["Green Apple","Bergamot","Musk"],   image:"assets/img/bottles/acqua-di-fruity.png",   imageWebp:"assets/img/bottles/acqua-di-fruity.webp", description:"Crisp citrus and juicy fruit with a polished finish.", category:"fresh", intensity:"light", longevity:"6-8 hours" }
 ];
 
-// Static review scaffold (can be edited any time)
+// Reviews Data
 const REVIEWS = {
   bol: [{stars:5,text:"Crisp and uplifting, lasts all day"}, {stars:4,text:"Clean‑fresh with a nice amber finish"}],
   dvs: [{stars:5,text:"Date‑night perfection"}, {stars:4,text:"Gourmand but elegant"}],
@@ -26,7 +32,7 @@ const REVIEWS = {
   acf: [{stars:4,text:"Citrus‑fruity compliment magnet"}],
 };
 
-// Product bundles (duos)
+// Product Bundles
 const BUNDLES = [
   {
     id: "fresh-duo",
@@ -54,7 +60,7 @@ const BUNDLES = [
   }
 ];
 
-// Quiz questions for scent finder
+// Quiz Questions
 const QUIZ_QUESTIONS = [
   {
     id: 1,
@@ -85,7 +91,7 @@ const QUIZ_QUESTIONS = [
   }
 ];
 
-// Product categories for filtering
+// Filter Options
 const CATEGORIES = [
   { id: "all", name: "All Fragrances" },
   { id: "featured", name: "Featured" },
@@ -94,7 +100,6 @@ const CATEGORIES = [
   { id: "oriental", name: "Oriental & Spicy" }
 ];
 
-// Price ranges for filtering
 const PRICE_RANGES = [
   { id: "all", name: "All Prices" },
   { id: "100-130", name: "AED 100 - 130", min: 100, max: 130 },
@@ -102,20 +107,27 @@ const PRICE_RANGES = [
   { id: "150+", name: "AED 150+", min: 150, max: 999 }
 ];
 
-function avgRating(id){
+// ============================================================================
+// UTILITY FUNCTIONS
+// ============================================================================
+
+// Rating & Review Helpers
+function avgRating(id) {
   const arr = REVIEWS[id] || [];
-  if(!arr.length) return 0;
-  return Math.round((arr.reduce((s,r)=>s+r.stars,0) / arr.length) * 10) / 10;
+  if (!arr.length) return 0;
+  return Math.round((arr.reduce((s, r) => s + r.stars, 0) / arr.length) * 10) / 10;
 }
 
-function reviewsCount(id){ 
-  return (REVIEWS[id]||[]).length; 
+function reviewsCount(id) { 
+  return (REVIEWS[id] || []).length; 
 }
 
+// Bundle Helpers
 function getBundle(id) {
   return BUNDLES.find(b => b.id === id);
 }
 
+// Product Filtering
 function getProductsByCategory(category) {
   if (category === 'all' || category === 'featured') {
     return category === 'featured' ? PRODUCTS.filter(p => p.featured) : PRODUCTS;
@@ -130,8 +142,8 @@ function getProductsByPriceRange(rangeId) {
   return PRODUCTS.filter(p => p.price >= range.min && p.price <= range.max);
 }
 
+// Quiz Recommendation Engine
 function getQuizRecommendation(answers) {
-  // Simple recommendation logic based on quiz answers
   const { intensity, occasion, family } = answers;
   
   let recommendations = PRODUCTS;
@@ -150,153 +162,48 @@ function getQuizRecommendation(answers) {
     recommendations = recommendations.filter(p => p.intensity !== 'light');
   }
   
-  // Return top 3 recommendations
   return recommendations.slice(0, 3);
 }
 
-// Make products available globally
-window.productsData = PRODUCTS;
+// ============================================================================
+// GLOBAL EXPORTS (for backward compatibility)
+// ============================================================================
 
-// Category data (based on product characteristics)
-window.categories = [
-    {
-        id: 'featured',
-        name: 'Featured',
-        description: 'Our most popular and signature fragrances',
-        image: 'assets/img/category-featured.jpg'
-    },
-    {
-        id: 'masculine',
-        name: 'Masculine',
-        description: 'Bold fragrances for confident men',
-        image: 'assets/img/category-masculine.jpg'
-    },
-    {
-        id: 'feminine',
-        name: 'Feminine',
-        description: 'Elegant fragrances for sophisticated women',
-        image: 'assets/img/category-feminine.jpg'
-    },
-    {
-        id: 'unisex',
-        name: 'Unisex',
-        description: 'Versatile fragrances for everyone',
-        image: 'assets/img/category-unisex.jpg'
-    }
-];
+// Make essential data available globally
+window.PRODUCTS = PRODUCTS;
+window.REVIEWS = REVIEWS;
+window.BUNDLES = BUNDLES;
+window.QUIZ_QUESTIONS = QUIZ_QUESTIONS;
+window.CATEGORIES = CATEGORIES;
+window.PRICE_RANGES = PRICE_RANGES;
 
-// Currency conversion rates
-window.currencyRates = RATES;
+// Make utility functions available globally
+window.avgRating = avgRating;
+window.reviewsCount = reviewsCount;
+window.getBundle = getBundle;
+window.getProductsByCategory = getProductsByCategory;
+window.getProductsByPriceRange = getProductsByPriceRange;
+window.getQuizRecommendation = getQuizRecommendation;
 
-// Site configuration
-window.siteConfig = {
-    name: 'RRD Collection',
-    description: 'Bold, mood-defining fragrances for those who walk into the room already unforgettable',
-    defaultCurrency: DEFAULT_CURRENCY,
-    currencySymbols: CURRENCY_SYMBOLS,
-    contactInfo: {
-        email: 'info@rrdcollection.com',
-        whatsapp: '+971 50 123 4567',
-        location: 'Dubai, United Arab Emirates'
-    },
-    socialMedia: {
-        instagram: 'https://instagram.com/rrdcollection',
-        facebook: 'https://facebook.com/rrdcollection'
-    }
-};
+// Currency utilities
+window.CURRENCY_SYMBOLS = CURRENCY_SYMBOLS;
+window.RATES = RATES;
+window.DEFAULT_CURRENCY = DEFAULT_CURRENCY;
 
-// Utility functions for data manipulation
-window.dataUtils = {
-    // Get products by category
-    getProductsByCategory: function(category) {
-        if (category === 'featured') {
-            return window.productsData.filter(product => product.featured);
-        }
-        // For other categories, you can add logic based on product characteristics
-        return window.productsData;
-    },
+// ============================================================================
+// INITIALIZATION
+// ============================================================================
 
-    // Get product by ID
-    getProductById: function(id) {
-        return window.productsData.find(product => product.id === id);
-    },
-
-    // Search products
-    searchProducts: function(query) {
-        const searchTerm = query.toLowerCase();
-        return window.productsData.filter(product => 
-            product.name.toLowerCase().includes(searchTerm) ||
-            product.description.toLowerCase().includes(searchTerm) ||
-            product.notes.some(note => note.toLowerCase().includes(searchTerm))
-        );
-    },
-
-    // Filter products by price range
-    filterProductsByPrice: function(minPrice, maxPrice, currency = 'AED') {
-        return window.productsData.filter(product => {
-            const convertedPrice = this.convertCurrency(product.price, 'AED', currency);
-            return convertedPrice >= minPrice && convertedPrice <= maxPrice;
-        });
-    },
-
-    // Get featured products
-    getFeaturedProducts: function(limit = 6) {
-        return window.productsData
-            .filter(product => product.featured)
-            .slice(0, limit);
-    },
-
-    // Get all products
-    getAllProducts: function() {
-        return window.productsData;
-    },
-
-    // Currency conversion
-    convertCurrency: function(amount, fromCurrency, toCurrency) {
-        if (fromCurrency === toCurrency) return amount;
-        
-        // Convert to AED first, then to target currency
-        const aedAmount = amount / window.currencyRates[fromCurrency];
-        return aedAmount * window.currencyRates[toCurrency];
-    },
-
-    // Format price with currency symbol
-    formatPrice: function(price, currency = 'AED') {
-        const symbol = window.siteConfig.currencySymbols[currency];
-        return `${symbol} ${price.toFixed(2)}`;
-    },
-
-    // Get currency symbol
-    getCurrencySymbol: function(currency) {
-        return CURRENCY_SYMBOLS[currency] || 'AED';
-    },
-
-    // Get conversion rate
-    getConversionRate: function(currency) {
-        return RATES[currency] || 1;
-    },
-
-    // Save currency preference
-    saveCurrencyPreference: function(currency) {
-        localStorage.setItem("rrd_currency", currency);
-    },
-
-    // Get saved currency preference
-    getSavedCurrency: function() {
-        return localStorage.getItem("rrd_currency") || "AED";
-    }
-};
-
-// Initialize data when script loads
 document.addEventListener('DOMContentLoaded', function() {
-    // Make sure products are loaded
-    if (!window.productsData) {
-        console.warn('Products data not loaded');
-    }
-    
-    // Log some statistics for debugging
-    console.log(`Loaded ${window.productsData.length} fragrances`);
-    console.log(`Featured products: ${window.productsData.filter(p => p.featured).length}`);
-    console.log(`Supported currencies: ${Object.keys(RATES).join(', ')}`);
-    console.log(`Default currency: ${DEFAULT_CURRENCY}`);
+  // Verify data loaded correctly
+  if (!PRODUCTS || PRODUCTS.length === 0) {
+    console.error('Products data not loaded');
+    return;
+  }
+  
+  // Log initialization info
+  console.log(`RRD Collection: Loaded ${PRODUCTS.length} fragrances`);
+  console.log(`Featured products: ${PRODUCTS.filter(p => p.featured).length}`);
+  console.log(`Supported currencies: ${Object.keys(RATES).join(', ')}`);
+  console.log(`Default currency: ${DEFAULT_CURRENCY}`);
 }); 
