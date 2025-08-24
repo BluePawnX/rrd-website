@@ -206,4 +206,12 @@ document.addEventListener('DOMContentLoaded', function() {
   console.log(`Featured products: ${PRODUCTS.filter(p => p.featured).length}`);
   console.log(`Supported currencies: ${Object.keys(RATES).join(', ')}`);
   console.log(`Default currency: ${DEFAULT_CURRENCY}`);
+  
+  // Dispatch event to notify other scripts that data is ready
+  document.dispatchEvent(new CustomEvent('data:loaded', { 
+    detail: { 
+      productCount: PRODUCTS.length,
+      featuredCount: PRODUCTS.filter(p => p.featured).length 
+    } 
+  }));
 }); 

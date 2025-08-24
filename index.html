@@ -230,8 +230,34 @@
         if (typeof initQuiz === 'function') initQuiz();
         if (typeof initNewsletter === 'function') initNewsletter();
         
-        // Render bestsellers
-        renderBestsellers();
+        // Render bestsellers with retry logic
+        let retryCount = 0;
+        const maxRetries = 10;
+        
+        function tryRenderBestsellers() {
+          console.log('Checking for PRODUCTS data...', {
+            typeof: typeof PRODUCTS,
+            exists: !!PRODUCTS,
+            length: PRODUCTS ? PRODUCTS.length : 'undefined'
+          });
+          
+          if (typeof PRODUCTS !== 'undefined' && PRODUCTS && PRODUCTS.length > 0) {
+            console.log('PRODUCTS data found, rendering bestsellers...');
+            renderBestsellers();
+          } else if (retryCount < maxRetries) {
+            retryCount++;
+            console.log(`Retrying bestsellers render (${retryCount}/${maxRetries})...`);
+            setTimeout(tryRenderBestsellers, 200);
+          } else {
+            console.error('Failed to load PRODUCTS data after maximum retries');
+            const bestGrid = document.getElementById('bestGrid');
+            if (bestGrid) {
+              bestGrid.innerHTML = '<p class="muted">Unable to load products. Please check your connection and refresh the page.</p>';
+            }
+          }
+        }
+        
+        tryRenderBestsellers();
         
         // Bind events
         document.addEventListener('cart:updated', () => {
@@ -277,8 +303,15 @@
           return;
         }
         
+        // Check if PRODUCTS data is available
+        if (typeof PRODUCTS === 'undefined' || !PRODUCTS || PRODUCTS.length === 0) {
+          console.warn('PRODUCTS data not available yet, retrying in 100ms...');
+          setTimeout(renderBestsellers, 100);
+          return;
+        }
+        
         // Get featured products and limit to 3
-        const featuredProducts = PRODUCTS.filter(p => p.featured).slice(0, 3);
+        let featuredProducts = PRODUCTS.filter(p => p.featured).slice(0, 3);
         
         // If less than 3 featured, add some popular ones
         if (featuredProducts.length < 3) {
@@ -286,15 +319,26 @@
           featuredProducts.push(...remainingProducts);
         }
         
+        // Fallback: if still no products, show first 3 available
+        if (featuredProducts.length === 0) {
+          featuredProducts = PRODUCTS.slice(0, 3);
+        }
+        
+        // Ensure we have at least 3 products
+        if (featuredProducts.length === 0) {
+          bestGrid.innerHTML = '<p class="muted">No products available at the moment.</p>';
+          return;
+        }
+        
         bestGrid.innerHTML = featuredProducts.map(card).join('');
         
-        console.log(`Rendered ${featuredProducts.length} bestsellers`);
+        console.log(`Rendered ${featuredProducts.length} bestsellers:`, featuredProducts.map(p => p.name));
         
       } catch (error) {
         console.error('Error rendering bestsellers:', error);
         const bestGrid = document.getElementById('bestGrid');
         if (bestGrid) {
-          bestGrid.innerHTML = '<p class="muted">Error loading bestsellers</p>';
+          bestGrid.innerHTML = '<p class="muted">Error loading bestsellers. Please refresh the page.</p>';
         }
       }
     }
@@ -305,6 +349,12 @@
     } else {
       initializeHome();
     }
+    
+    // Also listen for when data.js finishes loading
+    document.addEventListener('data:loaded', () => {
+      console.log('Data loaded event received, rendering bestsellers...');
+      renderBestsellers();
+    });
     
   })();
 </script>
