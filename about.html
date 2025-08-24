@@ -1,32 +1,39 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>About — RRD Collection</title>
-<meta name="description" content="The story behind RRD Collection.">
-<link rel="icon" href="assets/img/logo.png"><link rel="stylesheet" href="assets/css/style.css">
-<script src="assets/js/ui.js"></script><script src="assets/js/cart.js"></script><script src="assets/js/data.js"></script>
+<meta name="description" content="Discover the story behind RRD Collection. Learn about our passion for curating bold, mood-defining fragrances that create unforgettable impressions.">
+<meta property="og:title" content="About — RRD Collection">
+<meta property="og:description" content="Discover the story behind RRD Collection. Learn about our passion for curating bold, mood-defining fragrances.">
+<meta property="og:image" content="/assets/img/hero.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="About — RRD Collection">
+<meta name="twitter:description" content="Discover the story behind RRD Collection. Learn about our passion for curating bold, mood-defining fragrances.">
+<meta name="twitter:image" content="/assets/img/hero.png">
+<link rel="icon" href="/assets/img/logo.png">
+<link rel="stylesheet" href="/assets/css/style.css">
+<script src="/assets/js/data.js" defer></script>
+<script src="/assets/js/ui.js" defer></script>
+<script src="/assets/js/cart.js" defer></script>
+<script src="/assets/js/analytics.js" defer></script>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2GJXXCKDX8"></script>
 <script>
-  // Initialize currency selector
-  document.addEventListener('DOMContentLoaded', ()=>{
-    const sel=document.getElementById('currencySel'); 
-    if(sel){ 
-      sel.value=currentCurrency(); 
-      sel.addEventListener('change', e=> setCurrency(e.target.value)); 
-    }
-    document.dispatchEvent(new Event('cart:updated'));
-    const cc=document.getElementById('cart-count'); 
-    if(cc) cc.textContent = cartCount();
-  });
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-2GJXXCKDX8');
 </script>
 </head><body>
 <header>
   <div class="container header-inner">
-    <a class="brand" href="index.html"><img src="assets/img/logo.png" alt="RRD Collection logo"><strong>RRD Collection</strong></a>
+    <a class="brand" href="/index.html"><img src="/assets/img/logo.png" alt="RRD Collection logo"><strong>RRD Collection</strong></a>
     <nav aria-label="primary">
       <ul>
-        <li><a href="shop.html">Shop Perfumes</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="faq.html">FAQ</a></li>
-        <li><a href="contact.html">Contact</a></li>
+        <li><a href="/shop.html">Shop Perfumes</a></li>
+        <li><a href="/about.html">About</a></li>
+        <li><a href="/faq.html">FAQ</a></li>
+        <li><a href="/contact.html">Contact</a></li>
       </ul>
     </nav>
     <div class="header-cart" onclick="toggleCart()">🛒 <span class="badge" id="cart-count">0</span></div>
@@ -36,9 +43,7 @@
   <header><strong>Your Cart</strong><button class="btn secondary" onclick="toggleCart(false)">Close</button></header>
   <div class="cart-items"></div>
   <div class="cart-footer">
-    <div class="currency-switch">Currency:
-      <select id="currencySel"><option>AED</option><option>INR</option><option>USD</option></select>
-    </div>
+    <div class="currency-switch">Currency: <select id="currencySel"><option value="AED">AED</option><option value="INR">INR</option><option value="USD">USD</option></select> </div>
     <div class="cart-extras"></div>
     <div>Subtotal: <span class="cart-subtotal">AED 0.00</span></div>
     <button class="btn" onclick="checkoutWhatsApp()">Checkout via WhatsApp</button>
@@ -48,19 +53,57 @@
 
 <main class="container">
   <h1>About RRD Collection</h1>
-  <p style="max-width:720px">A scent isn't just a smell — it's a signature. RRD Collection curates bold, mood‑defining fragrances for those who walk into the room already unforgettable.</p>
-  <div class="grid" style="margin-top:16px">
-    <img src="assets/img/bottles/royal-arrival.png" alt="Royal Arrival bottle">
-    <img src="assets/img/bottles/virgin-gold-oud.png" alt="Virgin Gold Oud bottle">
-    <img src="assets/img/bottles/divine-sensation.png" alt="Divine Sensation bottle">
-    <img src="assets/img/bottles/acqua-di-fruity.png" alt="Acqua Di Fruity bottle">
+  <p style="max-width:720px;line-height:1.7">A scent isn't just a smell — it's a signature. RRD Collection curates bold, mood‑defining fragrances for those who walk into the room already unforgettable.</p>
+  
+  <div style="margin:32px 0">
+    <h2>Our Story</h2>
+    <p style="line-height:1.7">Founded with a passion for creating memorable olfactory experiences, RRD Collection represents the pinnacle of luxury fragrance craftsmanship. We believe that every individual deserves a signature scent that reflects their unique personality and leaves a lasting impression.</p>
+  </div>
+  
+  <div style="margin:32px 0">
+    <h2>Our Philosophy</h2>
+    <p style="line-height:1.7">We carefully select and blend the finest ingredients from around the world, creating fragrances that are not just perfumes, but expressions of confidence, elegance, and individuality. Each scent tells a story and becomes part of your personal narrative.</p>
+  </div>
+  
+  <div class="grid" style="margin:32px 0">
+    <img src="/assets/img/bottles/royal-arrival.png" alt="Royal Arrival bottle" loading="lazy" width="300" height="300">
+    <img src="/assets/img/bottles/virgin-gold-oud.png" alt="Virgin Gold Oud bottle" loading="lazy" width="300" height="300">
+    <img src="/assets/img/bottles/divine-sensation.png" alt="Divine Sensation bottle" loading="lazy" width="300" height="300">
+    <img src="/assets/img/bottles/acqua-di-fruity.png" alt="Acqua Di Fruity bottle" loading="lazy" width="300" height="300">
+  </div>
+  
+  <div style="margin:32px 0">
+    <h2>Quality & Craftsmanship</h2>
+    <p style="line-height:1.7">Every RRD Collection fragrance is crafted with meticulous attention to detail, using premium ingredients and time-tested techniques. Our perfumers are masters of their craft, ensuring that each creation meets our exacting standards for quality and longevity.</p>
   </div>
 </main>
+
+<script>
+  // Initialize page when DOM is ready
+  document.addEventListener('DOMContentLoaded', () => {
+    try {
+      // Initialize currency selector
+      const currencySel = document.getElementById('currencySel');
+      if (currencySel) {
+        currencySel.value = currentCurrency();
+        currencySel.addEventListener('change', e => setCurrency(e.target.value));
+      }
+      
+      // Initialize cart
+      document.dispatchEvent(new Event('cart:updated'));
+      const cartCount = document.getElementById('cart-count');
+      if (cartCount) cartCount.textContent = cartCount();
+      
+    } catch (error) {
+      console.error('Error initializing about page:', error);
+    }
+  });
+</script>
 
 <footer>
   <div class="container">
     <p class="muted">A scent isn't just a smell — it's a signature. RRD Collection curates bold, mood‑defining fragrances for those who walk into the room already unforgettable.</p>
-    <small>© <span id="year"></span> RRD Collection. All rights reserved.</small>
+    <small>© <span id="year"></span> RRD Collection. All rights reserved. | <a href="/privacy.html">Privacy Policy</a> | <a href="/terms.html">Terms of Service</a></small>
   </div>
 </footer>
 <div id="toast" aria-live="polite"></div>

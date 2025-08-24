@@ -250,13 +250,33 @@ async function handleNewsletterSubmit(e) {
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<span class="spinner"></span> Subscribing...';
     
-    // Simulate API call (replace with actual Formspree endpoint)
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // Use actual Formspree endpoint
+    const response = await fetch('https://formspree.io/f/mblarryg', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: email,
+        source: 'RRD Collection Website',
+        timestamp: new Date().toISOString()
+      })
+    });
     
-    toast('Thank you for subscribing!', 'success');
-    e.target.reset();
+    if (response.ok) {
+      toast('Thank you for subscribing!', 'success');
+      e.target.reset();
+      
+      // Track newsletter signup
+      if (window.trackNewsletterSignup) {
+        window.trackNewsletterSignup(email);
+      }
+    } else {
+      throw new Error('Subscription failed');
+    }
     
   } catch (error) {
+    console.error('Newsletter subscription error:', error);
     toast('Subscription failed. Please try again.', 'error');
   } finally {
     submitBtn.disabled = false;

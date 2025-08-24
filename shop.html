@@ -1,48 +1,55 @@
-<!doctype html><html lang="en"><head> 
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"> 
-  <title>Shop Perfumes — RRD Collection</title> 
-  <meta name="description" content="Discover RRD Collection perfumes."> 
-  <link rel="icon" href="assets/img/logo.png"><link rel="stylesheet" href="assets/css/style.css"> 
-  <script src="assets/js/data.js"></script><script src="assets/js/ui.js"></script><script src="assets/js/cart.js"></script> 
-</head><body> 
-  <!-- header + cart drawer (from PROMPT 6) --> 
-  <header> 
-    <div class="container header-inner"> 
-      <a class="brand" href="index.html"><img src="assets/img/logo.png" alt="RRD Collection logo"><strong>RRD Collection</strong></a> 
-      <nav aria-label="primary"> 
-        <ul> 
-          <li><a href="shop.html">Shop Perfumes</a></li> 
-          <li><a href="about.html">About</a></li> 
-          <li><a href="faq.html">FAQ</a></li> 
-          <li><a href="contact.html">Contact</a></li> 
-        </ul> 
-      </nav> 
-      <div class="header-cart" onclick="toggleCart()">🛒 <span class="badge" id="cart-count">0</span></div> 
-    </div> 
-  </header> 
-  <div id="cart-drawer" aria-label="Cart drawer"> 
-    <header><strong>Your Cart</strong><button class="btn secondary" onclick="toggleCart(false)">Close</button></header> 
-    <div class="cart-items"></div> 
-    <div class="cart-footer"> 
-      <div class="currency-switch">Currency: <select id="currencySel"><option>AED</option><option>INR</option><option>USD</option></select> </div> 
-      <div class="cart-extras"></div> 
-      <div>Subtotal: <span class="cart-subtotal">AED 0.00</span></div> 
-      <button class="btn" onclick="checkoutWhatsApp()">Checkout via WhatsApp</button> 
-      <button class="btn secondary" onclick="checkoutEmail()">Checkout via Email</button> 
-    </div> 
-  </div> 
-  <script> 
-    document.addEventListener('DOMContentLoaded', ()=>{ 
-      const sel=document.getElementById('currencySel'); 
-      if(sel){ 
-        sel.value=currentCurrency(); 
-        sel.addEventListener('change', e=> setCurrency(e.target.value)); 
-      } 
-      document.dispatchEvent(new Event('cart:updated')); 
-      const cc=document.getElementById('cart-count'); 
-      if(cc) cc.textContent = cartCount(); 
-    }); 
-  </script> 
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Shop Perfumes — RRD Collection</title>
+<meta name="description" content="Discover RRD Collection's luxury fragrances. Shop our curated collection of bold, mood-defining perfumes with detailed notes and reviews.">
+<meta property="og:title" content="Shop Perfumes — RRD Collection">
+<meta property="og:description" content="Discover RRD Collection's luxury fragrances. Shop our curated collection of bold, mood-defining perfumes.">
+<meta property="og:image" content="/assets/img/hero.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Shop Perfumes — RRD Collection">
+<meta name="twitter:description" content="Discover RRD Collection's luxury fragrances. Shop our curated collection of bold, mood-defining perfumes.">
+<meta name="twitter:image" content="/assets/img/hero.png">
+<link rel="icon" href="/assets/img/logo.png">
+<link rel="stylesheet" href="/assets/css/style.css">
+<script src="/assets/js/data.js" defer></script>
+<script src="/assets/js/ui.js" defer></script>
+<script src="/assets/js/cart.js" defer></script>
+<script src="/assets/js/analytics.js" defer></script>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2GJXXCKDX8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-2GJXXCKDX8');
+</script>
+</head><body>
+<header>
+  <div class="container header-inner">
+    <a class="brand" href="/index.html"><img src="/assets/img/logo.png" alt="RRD Collection logo"><strong>RRD Collection</strong></a>
+    <nav aria-label="primary">
+      <ul>
+        <li><a href="/shop.html">Shop Perfumes</a></li>
+        <li><a href="/about.html">About</a></li>
+        <li><a href="/faq.html">FAQ</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="header-cart" onclick="toggleCart()">🛒 <span class="badge" id="cart-count">0</span></div>
+  </div>
+</header>
+<div id="cart-drawer" aria-label="Cart drawer">
+  <header><strong>Your Cart</strong><button class="btn secondary" onclick="toggleCart(false)">Close</button></header>
+  <div class="cart-items"></div>
+  <div class="cart-footer">
+    <div class="currency-switch">Currency: <select id="currencySel"><option value="AED">AED</option><option value="INR">INR</option><option value="USD">USD</option></select> </div>
+    <div class="cart-extras"></div>
+    <div>Subtotal: <span class="cart-subtotal">AED 0.00</span></div>
+    <button class="btn" onclick="checkoutWhatsApp()">Checkout via WhatsApp</button>
+    <button class="btn secondary" onclick="checkoutEmail()">Checkout via Email</button>
+  </div>
+</div>
 
 <main class="container">
   <h1>Shop Perfumes</h1>
@@ -101,22 +108,94 @@
 </div>
 
 <script>
-  // show/hide backdrop via class toggle
-  const pdpBackdrop = document.getElementById('pdpModal');
-  const showBackdrop = (show)=>{ pdpBackdrop.style.display = show ? 'grid' : 'none'; };
-
-  // Card renderer
-  function card(p){
-    const rating = avgRating(p.id), count = reviewsCount(p.id);
+// Error handling and global scope verification
+(function() {
+  'use strict';
+  
+  // Verify required globals are available
+  if (typeof PRODUCTS === 'undefined') {
+    console.error('PRODUCTS not found - check data.js include order');
+    document.getElementById('shopGrid').innerHTML = '<p class="muted">Error loading products. Please refresh the page.</p>';
+    return;
+  }
+  
+  if (typeof avgRating === 'undefined' || typeof reviewsCount === 'undefined') {
+    console.error('Helper functions missing - check data.js include order');
+    return;
+  }
+  
+  // DOM ready guard - only run once
+  let isInitialized = false;
+  
+  function initializeShop() {
+    if (isInitialized) return;
+    isInitialized = true;
+    
+    try {
+      // Initialize currency selector
+      const currencySel = document.getElementById('currencySel');
+      const currencyTop = document.getElementById('currencyTop');
+      
+      if (currencySel) {
+        currencySel.value = currentCurrency();
+        currencySel.addEventListener('change', e => setCurrency(e.target.value));
+      }
+      
+      if (currencyTop) {
+        currencyTop.value = currentCurrency();
+        currencyTop.addEventListener('change', e => setCurrency(e.target.value));
+      }
+      
+      // Initialize search and filters
+      const search = document.getElementById('search');
+      const categoryFilter = document.getElementById('category-filter');
+      const priceFilter = document.getElementById('price-filter');
+      
+      if (search) search.addEventListener('input', debounce(render, 300));
+      if (categoryFilter) categoryFilter.addEventListener('change', render);
+      if (priceFilter) priceFilter.addEventListener('change', render);
+      
+      // Initial render
+      render();
+      
+      // Check for deep link
+      if (window.location.hash) {
+        const productId = window.location.hash.substring(1);
+        setTimeout(() => openPDP(productId), 100);
+      }
+      
+      // Bind events
+      document.addEventListener('currency:changed', render);
+      document.addEventListener('cart:updated', () => {
+        const cartCount = document.getElementById('cart-count');
+        if (cartCount) cartCount.textContent = cartCount();
+      });
+      
+    } catch (error) {
+      console.error('Error initializing shop:', error);
+      toast('Error initializing shop page', 'error');
+    }
+  }
+  
+  // Card renderer with defensive programming
+  function card(p) {
+    if (!p || !p.id || !p.name) {
+      console.warn('Invalid product data:', p);
+      return '';
+    }
+    
+    const rating = avgRating(p.id) || 0;
+    const count = reviewsCount(p.id) || 0;
+    
     return `
       <article class="card" id="${p.id}">
         <picture>
-          <source type="image/webp" srcset="${p.imageWebp}">
-          <img src="${p.image}" alt="${p.name} bottle">
+          <source type="image/webp" srcset="${p.imageWebp || p.image}">
+          <img src="${p.image}" alt="${p.name} bottle" loading="lazy" width="300" height="300">
         </picture>
         <div class="pad">
           <h3>${p.name}</h3>
-          <div class="meta">${(p.notes||[]).slice(0,3).join(' • ')}</div>
+          <div class="meta">${(p.notes || []).slice(0, 3).join(' • ')}</div>
           <div class="meta">${renderStars(rating)} <span class="muted">(${count})</span></div>
           <div class="price">${formatPrice(p.price)}</div>
           <div class="actions">
@@ -126,15 +205,24 @@
         </div>
       </article>`;
   }
-
-  function openPDP(id){
-    const p = PRODUCTS.find(x=>x.id===id); if(!p) return;
-    const rating = avgRating(id), count = reviewsCount(id);
+  
+  function openPDP(id) {
+    if (!id) return;
+    
+    const p = PRODUCTS.find(x => x.id === id);
+    if (!p) {
+      console.warn('Product not found:', id);
+      return;
+    }
+    
+    const rating = avgRating(id) || 0;
+    const count = reviewsCount(id) || 0;
+    
     const html = `
       <div style="display:grid;gap:14px;grid-template-columns:1fr;align-items:start;padding:6px 12px">
         <picture>
-          <source type="image/webp" srcset="${p.imageWebp}">
-          <img src="${p.image}" alt="${p.name} bottle" style="width:100%;border-radius:12px;background:#0f0f0f">
+          <source type="image/webp" srcset="${p.imageWebp || p.image}">
+          <img src="${p.image}" alt="${p.name} bottle" style="width:100%;border-radius:12px;background:#0f0f0f" width="300" height="300">
         </picture>
         <div>
           <h2 id="pdpTitle" style="margin:.2rem 0 .6rem">${p.name}</h2>
@@ -151,64 +239,169 @@
       </div>
       <div style="border-top:1px solid rgba(255,255,255,.07);padding-top:10px">
         <h4 style="margin:.2rem 0 .6rem">Reviews</h4>
-        ${(REVIEWS[id]||[]).map(r=>`<div class="meta" style="margin:.2rem 0">${renderStars(r.stars)} — ${r.text}</div>`).join('') || '<div class="muted">No reviews yet.</div>'}
+        ${(REVIEWS[id] || []).map(r => `<div class="meta" style="margin:.2rem 0">${renderStars(r.stars)} — ${r.text}</div>`).join('') || '<div class="muted">No reviews yet.</div>'}
       </div>`;
-    document.getElementById('pdpBody').innerHTML = html;
-    showBackdrop(true); openModal('#pdpModal');
+    
+    const pdpBody = document.getElementById('pdpBody');
+    if (pdpBody) {
+      pdpBody.innerHTML = html;
+    }
+    
+    // Update URL hash for deep linking
+    window.location.hash = id;
+    
+    // Show modal
+    const modal = document.getElementById('pdpModal');
+    if (modal) {
+      modal.style.display = 'grid';
+      openModal('#pdpModal');
+    }
   }
-
-  // Grid render + search
-  const grid = document.getElementById('shopGrid'), emptyMsg = document.getElementById('emptyMsg'), search = document.getElementById('search');
-  function render(){
-    const q = (search.value||'').toLowerCase();
-    const items = PRODUCTS.filter(p=> p.name.toLowerCase().includes(q) || (p.notes||[]).join(' ').toLowerCase().includes(q));
-    grid.innerHTML = items.map(card).join('');
-    emptyMsg.style.display = items.length? 'none':'block';
+  
+  // Robust render function
+  function render() {
+    try {
+      const grid = document.getElementById('shopGrid');
+      const emptyMsg = document.getElementById('emptyMsg');
+      
+      if (!grid) {
+        console.error('Shop grid element not found');
+        return;
+      }
+      
+      // Get filter values
+      const searchQuery = (document.getElementById('search')?.value || '').toLowerCase();
+      const categoryFilter = document.getElementById('category-filter')?.value || 'all';
+      const priceFilter = document.getElementById('price-filter')?.value || 'all';
+      
+      // Filter products
+      let items = PRODUCTS;
+      
+      // Apply category filter
+      if (categoryFilter !== 'all') {
+        if (categoryFilter === 'featured') {
+          items = items.filter(p => p.featured);
+        } else {
+          items = items.filter(p => p.category === categoryFilter);
+        }
+      }
+      
+      // Apply price filter
+      if (priceFilter !== 'all') {
+        const [min, max] = priceFilter === '150+' ? [150, 999] : priceFilter.split('-').map(Number);
+        items = items.filter(p => p.price >= min && p.price <= max);
+      }
+      
+      // Apply search filter
+      if (searchQuery) {
+        items = items.filter(p => 
+          p.name.toLowerCase().includes(searchQuery) || 
+          (p.notes || []).join(' ').toLowerCase().includes(searchQuery)
+        );
+      }
+      
+      // Render products
+      grid.innerHTML = items.map(card).join('');
+      
+      // Update empty message
+      if (emptyMsg) {
+        emptyMsg.style.display = items.length ? 'none' : 'block';
+      }
+      
+      // Log render info
+      console.log(`Rendered ${items.length} products (query: "${searchQuery}", category: ${categoryFilter}, price: ${priceFilter})`);
+      
+    } catch (error) {
+      console.error('Error rendering shop grid:', error);
+      const grid = document.getElementById('shopGrid');
+      if (grid) {
+        grid.innerHTML = '<p class="muted">Error loading products. Please refresh the page.</p>';
+      }
+    }
   }
-  render(); search.addEventListener('input', render);
+  
+  // Utility function
+  function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
+  
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeShop);
+  } else {
+    initializeShop();
+  }
+  
+  // Make functions globally available
+  window.openPDP = openPDP;
+  
+})();
 
-  const sel=document.getElementById('currencyTop'); sel.value=currentCurrency(); sel.addEventListener('change', e=> setCurrency(e.target.value));
-  document.addEventListener('currency:changed', render);
-  document.addEventListener('cart:updated', ()=> (document.getElementById('cart-count').textContent = cartCount()));
-
-  // JSON-LD for all products
-  (function injectJSONLD(){
-    PRODUCTS.forEach(p=>{
+// JSON-LD for all products
+(function injectJSONLD() {
+  try {
+    if (typeof PRODUCTS === 'undefined') {
+      console.warn('PRODUCTS not available for JSON-LD generation');
+      return;
+    }
+    
+    PRODUCTS.forEach(p => {
       const ld = {
-        "@context":"https://schema.org",
-        "@type":"Product",
+        "@context": "https://schema.org",
+        "@type": "Product",
         "name": p.name,
-        "image": [ location.origin + '/' + (p.imageWebp || p.image) ],
-        "brand": {"@type":"Brand","name":"RRD Collection"},
+        "image": [location.origin + '/' + (p.imageWebp || p.image)],
+        "brand": {"@type": "Brand", "name": "RRD Collection"},
         "description": p.description,
         "offers": {
-          "@type":"Offer",
+          "@type": "Offer",
           "priceCurrency": "AED",
           "price": String(p.price),
           "availability": "https://schema.org/InStock",
-          "url": location.href.split('#')[0] + '#' + p.id
-        },
-        "aggregateRating": (reviewsCount(p.id) ? {"@type":"AggregateRating","ratingValue": String(avgRating(p.id)), "reviewCount": String(reviewsCount(p.id))} : undefined)
+          "url": location.origin + '/shop.html#' + p.id
+        }
       };
+      
+      // Add aggregate rating if reviews exist
+      if (typeof REVIEWS !== 'undefined' && REVIEWS[p.id] && REVIEWS[p.id].length > 0) {
+        const rating = avgRating(p.id);
+        const count = reviewsCount(p.id);
+        if (rating > 0 && count > 0) {
+          ld.aggregateRating = {
+            "@type": "AggregateRating",
+            "ratingValue": String(rating),
+            "reviewCount": String(count)
+          };
+        }
+      }
+      
       const s = document.createElement('script');
       s.type = 'application/ld+json';
       s.textContent = JSON.stringify(ld);
       document.body.appendChild(s);
     });
-  })();
-
-  // Backdrop visibility toggle hook
-  const _open = openModal; openModal = function(id){ document.querySelector(id).style.display='grid'; _open(id); };
-  const _close = closeModal; closeModal = function(id){ document.querySelector(typeof id==='string'?id:'#pdpModal').style.display='none'; _close(id); };
+    
+    console.log('JSON-LD generated for', PRODUCTS.length, 'products');
+  } catch (error) {
+    console.error('Error generating JSON-LD:', error);
+  }
+})();
 </script>
 
-  <!-- footer --> 
-  <footer> 
-    <div class="container"> 
-      <p class="muted">A scent isn't just a smell — it's a signature. RRD Collection curates bold, mood‑defining fragrances for those who walk into the room already unforgettable.</p> 
-      <small>© <span id="year"></span> RRD Collection. All rights reserved.</small> 
-    </div> 
-  </footer> 
-  <div id="toast" aria-live="polite"></div> 
-  <script>document.getElementById('year').textContent = new Date().getFullYear();</script> 
+<footer>
+  <div class="container">
+    <p class="muted">A scent isn't just a smell — it's a signature. RRD Collection curates bold, mood‑defining fragrances for those who walk into the room already unforgettable.</p>
+    <small>© <span id="year"></span> RRD Collection. All rights reserved. | <a href="/privacy.html">Privacy Policy</a> | <a href="/terms.html">Terms of Service</a></small>
+  </div>
+</footer>
+<div id="toast" aria-live="polite"></div>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body></html> 

@@ -2,8 +2,20 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Privacy Policy — RRD Collection</title>
 <meta name="description" content="RRD Collection privacy policy and data protection information.">
-<link rel="icon" href="assets/img/logo.png"><link rel="stylesheet" href="assets/css/style.css">
-<script src="assets/js/data.js"></script><script src="assets/js/ui.js"></script><script src="assets/js/cart.js"></script>
+<link rel="icon" href="/assets/img/logo.png">
+<link rel="stylesheet" href="/assets/css/style.css">
+<script src="/assets/js/data.js" defer></script>
+<script src="/assets/js/ui.js" defer></script>
+<script src="/assets/js/cart.js" defer></script>
+<script src="/assets/js/analytics.js" defer></script>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2GJXXCKDX8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-2GJXXCKDX8');
+</script>
 <script>
   document.addEventListener('DOMContentLoaded', ()=>{
     const sel=document.getElementById('currencySel'); 
@@ -19,13 +31,13 @@
 </head><body>
 <header>
   <div class="container header-inner">
-    <a class="brand" href="index.html"><img src="assets/img/logo.png" alt="RRD Collection logo"><strong>RRD Collection</strong></a>
+    <a class="brand" href="/index.html"><img src="/assets/img/logo.png" alt="RRD Collection logo"><strong>RRD Collection</strong></a>
     <nav aria-label="primary">
       <ul>
-        <li><a href="shop.html">Shop Perfumes</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="faq.html">FAQ</a></li>
-        <li><a href="contact.html">Contact</a></li>
+        <li><a href="/shop.html">Shop Perfumes</a></li>
+        <li><a href="/about.html">About</a></li>
+        <li><a href="/faq.html">FAQ</a></li>
+        <li><a href="/contact.html">Contact</a></li>
       </ul>
     </nav>
     <div class="header-cart" onclick="toggleCart()">🛒 <span class="badge" id="cart-count">0</span></div>

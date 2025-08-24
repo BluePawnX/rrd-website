@@ -1,19 +1,39 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Home — RRD Collection</title>
-<meta name="description" content="RRD Collection curates bold, mood‑defining fragrances.">
-<link rel="icon" href="assets/img/logo.png"><link rel="stylesheet" href="assets/css/style.css">
-<script src="assets/js/data.js"></script><script src="assets/js/ui.js"></script><script src="assets/js/cart.js"></script>
+<meta name="description" content="RRD Collection curates bold, mood‑defining fragrances. Discover luxury perfumes that make unforgettable impressions.">
+<meta property="og:title" content="Home — RRD Collection">
+<meta property="og:description" content="RRD Collection curates bold, mood‑defining fragrances. Discover luxury perfumes that make unforgettable impressions.">
+<meta property="og:image" content="/assets/img/hero.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Home — RRD Collection">
+<meta name="twitter:description" content="RRD Collection curates bold, mood‑defining fragrances. Discover luxury perfumes that make unforgettable impressions.">
+<meta name="twitter:image" content="/assets/img/hero.png">
+<link rel="icon" href="/assets/img/logo.png">
+<link rel="stylesheet" href="/assets/css/style.css">
+<script src="/assets/js/data.js" defer></script>
+<script src="/assets/js/ui.js" defer></script>
+<script src="/assets/js/cart.js" defer></script>
+<script src="/assets/js/analytics.js" defer></script>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2GJXXCKDX8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-2GJXXCKDX8');
+</script>
 </head><body>
 <header>
   <div class="container header-inner">
-    <a class="brand" href="index.html"><img src="assets/img/logo.png" alt="RRD Collection logo"><strong>RRD Collection</strong></a>
+    <a class="brand" href="/index.html"><img src="/assets/img/logo.png" alt="RRD Collection logo"><strong>RRD Collection</strong></a>
     <nav aria-label="primary">
       <ul>
-        <li><a href="shop.html">Shop Perfumes</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="faq.html">FAQ</a></li>
-        <li><a href="contact.html">Contact</a></li>
+        <li><a href="/shop.html">Shop Perfumes</a></li>
+        <li><a href="/about.html">About</a></li>
+        <li><a href="/faq.html">FAQ</a></li>
+        <li><a href="/contact.html">Contact</a></li>
       </ul>
     </nav>
     <div class="header-cart" onclick="toggleCart()">🛒 <span class="badge" id="cart-count">0</span></div>
@@ -24,7 +44,7 @@
   <div class="cart-items"></div>
   <div class="cart-footer">
     <div class="currency-switch">Currency:
-      <select id="currencySel"><option>AED</option><option>INR</option><option>USD</option></select>
+      <select id="currencySel"><option value="AED">AED</option><option value="INR">INR</option><option value="USD">USD</option></select>
     </div>
     <div class="cart-extras"></div>
     <div>Subtotal: <span class="cart-subtotal">AED 0.00</span></div>
@@ -32,25 +52,13 @@
     <button class="btn secondary" onclick="checkoutEmail()">Checkout via Email</button>
   </div>
 </div>
-<script>
-  document.addEventListener('DOMContentLoaded', ()=>{
-    const sel=document.getElementById('currencySel'); 
-    if(sel){ 
-      sel.value=currentCurrency(); 
-      sel.addEventListener('change', e=> setCurrency(e.target.value)); 
-    }
-    document.dispatchEvent(new Event('cart:updated'));
-    const cc=document.getElementById('cart-count'); 
-    if(cc) cc.textContent = cartCount();
-  });
-</script>
 
 <main>
   <section class="hero">
     <div class="container"><div class="copy">
       <h1>RRD Collection</h1>
       <p>A scent isn't just a smell — it's a signature. RRD Collection curates bold, mood‑defining fragrances for those who walk into the room already unforgettable.</p>
-      <p><a class="btn" href="shop.html">Shop Perfumes</a></p>
+      <p><a class="btn" href="/shop.html">Shop Perfumes</a></p>
     </div></div>
   </section>
   
@@ -173,49 +181,121 @@
 </div>
 
 <script>
-  function card(p){ 
-    return `<article class="card">
-      <picture>
-        <source type="image/webp" srcset="${p.imageWebp}">
-        <img src="${p.image}" alt="${p.name} bottle">
-      </picture>
-      <div class="pad">
-        <h3>${p.name}</h3>
-        <div class="meta">${(p.notes||[]).slice(0,3).join(' • ')}</div>
-        <div class="meta">${renderStars(avgRating(p.id))} <span class="muted">(${reviewsCount(p.id)})</span></div>
-        <div class="price">${formatPrice(p.price)}</div>
-        <div class="actions"><button class="btn" onclick="addToCart('${p.id}')">Add to cart</button></div>
-      </div>
-    </article>`; }
-  try {
-    document.getElementById('bestGrid').innerHTML = PRODUCTS.filter(p=>p.featured).map(card).join('');
-  } catch (error) {
-    console.error('Error loading bestsellers:', error);
-    document.getElementById('bestGrid').innerHTML = '<p class="muted">Error loading bestsellers</p>';
-  }
-  document.addEventListener('cart:updated', ()=> (document.getElementById('cart-count').textContent = cartCount()));
-  
-  // Initialize UI components
-  document.addEventListener('DOMContentLoaded', ()=>{
-    const sel=document.getElementById('currencySel'); 
-    if(sel){ 
-      sel.value=currentCurrency(); 
-      sel.addEventListener('change', e=> setCurrency(e.target.value)); 
-    }
-    document.dispatchEvent(new Event('cart:updated'));
-    const cc=document.getElementById('cart-count'); 
-    if(cc) cc.textContent = cartCount();
+  // Error handling and global scope verification
+  (function() {
+    'use strict';
     
-    // Initialize quiz and newsletter
-    initQuiz();
-    initNewsletter();
-  });
+    // Verify required globals are available
+    if (typeof PRODUCTS === 'undefined') {
+      console.error('PRODUCTS not found - check data.js include order');
+      document.getElementById('bestGrid').innerHTML = '<p class="muted">Error loading products. Please refresh the page.</p>';
+      return;
+    }
+    
+    if (typeof avgRating === 'undefined' || typeof reviewsCount === 'undefined') {
+      console.error('Helper functions missing - check data.js include order');
+      return;
+    }
+    
+    // DOM ready guard - only run once
+    let isInitialized = false;
+    
+    function initializeHome() {
+      if (isInitialized) return;
+      isInitialized = true;
+      
+      try {
+        // Initialize currency selector
+        const currencySel = document.getElementById('currencySel');
+        if (currencySel) {
+          currencySel.value = currentCurrency();
+          currencySel.addEventListener('change', e => setCurrency(e.target.value));
+        }
+        
+        // Initialize cart count
+        document.dispatchEvent(new Event('cart:updated'));
+        const cartCount = document.getElementById('cart-count');
+        if (cartCount) cartCount.textContent = cartCount();
+        
+        // Initialize quiz and newsletter
+        if (typeof initQuiz === 'function') initQuiz();
+        if (typeof initNewsletter === 'function') initNewsletter();
+        
+        // Render bestsellers
+        renderBestsellers();
+        
+        // Bind events
+        document.addEventListener('cart:updated', () => {
+          const cartCount = document.getElementById('cart-count');
+          if (cartCount) cartCount.textContent = cartCount();
+        });
+        
+      } catch (error) {
+        console.error('Error initializing home page:', error);
+        toast('Error initializing home page', 'error');
+      }
+    }
+    
+    // Card renderer with defensive programming
+    function card(p) {
+      if (!p || !p.id || !p.name) {
+        console.warn('Invalid product data:', p);
+        return '';
+      }
+      
+      const rating = avgRating(p.id) || 0;
+      const count = reviewsCount(p.id) || 0;
+      
+      return `<article class="card">
+        <picture>
+          <source type="image/webp" srcset="${p.imageWebp || p.image}">
+          <img src="${p.image}" alt="${p.name} bottle" loading="lazy" width="300" height="300">
+        </picture>
+        <div class="pad">
+          <h3>${p.name}</h3>
+          <div class="meta">${(p.notes || []).slice(0, 3).join(' • ')}</div>
+          <div class="meta">${renderStars(rating)} <span class="muted">(${count})</span></div>
+          <div class="price">${formatPrice(p.price)}</div>
+          <div class="actions"><button class="btn" onclick="addToCart('${p.id}')">Add to cart</button></div>
+        </div>
+      </article>`; }
+    
+    function renderBestsellers() {
+      try {
+        const bestGrid = document.getElementById('bestGrid');
+        if (!bestGrid) {
+          console.error('Bestsellers grid element not found');
+          return;
+        }
+        
+        const featuredProducts = PRODUCTS.filter(p => p.featured);
+        bestGrid.innerHTML = featuredProducts.map(card).join('');
+        
+        console.log(`Rendered ${featuredProducts.length} bestsellers`);
+        
+      } catch (error) {
+        console.error('Error rendering bestsellers:', error);
+        const bestGrid = document.getElementById('bestGrid');
+        if (bestGrid) {
+          bestGrid.innerHTML = '<p class="muted">Error loading bestsellers</p>';
+        }
+      }
+    }
+    
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeHome);
+    } else {
+      initializeHome();
+    }
+    
+  })();
 </script>
 
 <footer>
   <div class="container">
     <p class="muted">A scent isn't just a smell — it's a signature. RRD Collection curates bold, mood‑defining fragrances for those who walk into the room already unforgettable.</p>
-    <small>© <span id="year"></span> RRD Collection. All rights reserved.</small>
+    <small>© <span id="year"></span> RRD Collection. All rights reserved. | <a href="/privacy.html">Privacy Policy</a> | <a href="/terms.html">Terms of Service</a></small>
   </div>
 </footer>
 <div id="toast" aria-live="polite"></div>

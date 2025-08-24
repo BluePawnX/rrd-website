@@ -1,10 +1,10 @@
-// Analytics.js - Google Analytics placeholder for RRD Collection
-// Replace with your actual Google Analytics tracking code
+// Analytics.js - Google Analytics integration for RRD Collection
+// Google Analytics 4 (GA4) configuration
 
-// Google Analytics 4 (GA4) placeholder
+// Google Analytics 4 (GA4) configuration
 function initGA() {
   // Replace 'G-XXXXXXXXXX' with your actual GA4 measurement ID
-  const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
+  const GA_MEASUREMENT_ID = 'G-2GJXXCKDX8';
   
   if (typeof gtag !== 'undefined') {
     // Page view tracking
