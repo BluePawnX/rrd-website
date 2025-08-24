@@ -32,7 +32,7 @@
 <header>
   <div class="container header-inner">
     <a class="brand" href="/index.html"><img src="/assets/img/logo.png" alt="RRD Collection logo"><strong>RRD Collection</strong></a>
-    <nav aria-label="primary">
+    <nav aria-label="primary" id="main-nav">
       <ul>
         <li><a href="/shop.html">Shop Perfumes</a></li>
         <li><a href="/about.html">About</a></li>
@@ -41,6 +41,11 @@
       </ul>
     </nav>
     <div class="header-cart" onclick="toggleCart()">🛒 <span class="badge" id="cart-count">0</span></div>
+    <button class="mobile-nav-toggle" aria-label="Toggle navigation" onclick="toggleMobileNav()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
   </div>
 </header>
 <div id="cart-drawer" aria-label="Cart drawer">
@@ -127,6 +132,15 @@
   </div>
 </footer>
 <div id="toast" aria-live="polite"></div>
+
+<!-- Floating WhatsApp Button -->
+<div class="floating-whatsapp">
+  <a href="https://wa.me/971559938295?text=Hi%20RRD%20Collection!%20I%20have%20a%20question%20about%20your%20fragrances." 
+     class="btn" target="_blank" rel="noopener" aria-label="Contact us on WhatsApp">
+    📱
+  </a>
+</div>
+
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
   document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', { 

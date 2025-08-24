@@ -277,7 +277,15 @@
           return;
         }
         
-        const featuredProducts = PRODUCTS.filter(p => p.featured);
+        // Get featured products and limit to 3
+        const featuredProducts = PRODUCTS.filter(p => p.featured).slice(0, 3);
+        
+        // If less than 3 featured, add some popular ones
+        if (featuredProducts.length < 3) {
+          const remainingProducts = PRODUCTS.filter(p => !p.featured).slice(0, 3 - featuredProducts.length);
+          featuredProducts.push(...remainingProducts);
+        }
+        
         bestGrid.innerHTML = featuredProducts.map(card).join('');
         
         console.log(`Rendered ${featuredProducts.length} bestsellers`);
