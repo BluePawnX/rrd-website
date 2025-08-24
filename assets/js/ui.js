@@ -166,10 +166,38 @@ function showQuizStep(step) {
     s.classList.toggle('active', i + 1 === step);
   });
   
+  // Update progress bar
+  updateQuizProgress(step);
+  
+  // Update progress text
+  const progressText = qs('.progress-text');
+  if (progressText) {
+    progressText.textContent = `Step ${step} of ${QUIZ_QUESTIONS.length}`;
+  }
+  
   const question = QUIZ_QUESTIONS[step - 1];
   if (question) {
-    qs('.quiz-step.active h3').textContent = question.question;
+    // Update step header
+    const stepHeader = qs('.quiz-step.active .step-header h3');
+    if (stepHeader) {
+      stepHeader.textContent = question.question;
+    }
+    
+    // Update step description if it exists
+    const stepDesc = qs('.quiz-step.active .step-description');
+    if (stepDesc && question.description) {
+      stepDesc.textContent = question.description;
+    }
+    
     renderQuizOptions(question.options);
+  }
+}
+
+function updateQuizProgress(step) {
+  const progressFill = qs('.progress-fill');
+  if (progressFill) {
+    const percentage = (step / QUIZ_QUESTIONS.length) * 100;
+    progressFill.style.width = `${percentage}%`;
   }
 }
 

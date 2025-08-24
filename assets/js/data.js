@@ -65,28 +65,31 @@ const QUIZ_QUESTIONS = [
   {
     id: 1,
     question: "What's your preferred scent intensity?",
+    description: "Choose the fragrance strength that matches your personality",
     options: [
-      { id: "light", text: "Light & Subtle", description: "Gentle, close-to-skin fragrances" },
-      { id: "medium", text: "Balanced", description: "Moderate projection, noticeable but not overwhelming" },
-      { id: "strong", text: "Bold & Memorable", description: "Strong presence, makes an entrance" }
+      { id: "light", text: "Light & Subtle", description: "Gentle, close-to-skin fragrances that whisper elegance" },
+      { id: "medium", text: "Balanced", description: "Moderate projection, noticeable but never overwhelming" },
+      { id: "strong", text: "Bold & Memorable", description: "Strong presence that makes an unforgettable entrance" }
     ]
   },
   {
     id: 2,
     question: "When do you plan to wear this fragrance?",
+    description: "Select the occasions that define your lifestyle",
     options: [
-      { id: "daily", text: "Daily Wear", description: "Office, casual outings, everyday use" },
-      { id: "evening", text: "Evening & Events", description: "Dinner dates, parties, special occasions" },
-      { id: "both", text: "Versatile", description: "Works for both day and evening" }
+      { id: "daily", text: "Daily Wear", description: "Office, casual outings, and everyday sophistication" },
+      { id: "evening", text: "Evening & Events", description: "Dinner dates, parties, and special occasions" },
+      { id: "both", text: "Versatile", description: "Seamlessly transitions from day to evening" }
     ]
   },
   {
     id: 3,
     question: "What's your preferred fragrance family?",
+    description: "Choose the scent profile that resonates with your soul",
     options: [
-      { id: "fresh", text: "Fresh & Clean", description: "Citrus, aquatic, clean notes" },
-      { id: "floral", text: "Floral & Romantic", description: "Rose, jasmine, romantic blooms" },
-      { id: "oriental", text: "Oriental & Spicy", description: "Amber, oud, warm spices" }
+      { id: "fresh", text: "Fresh & Clean", description: "Citrus, aquatic, and invigorating clean notes" },
+      { id: "floral", text: "Floral & Romantic", description: "Rose, jasmine, and enchanting romantic blooms" },
+      { id: "oriental", text: "Oriental & Spicy", description: "Amber, oud, and warm, mysterious spices" }
     ]
   }
 ];
