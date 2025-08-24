@@ -71,9 +71,20 @@
     </div></div>
   </section>
   
-  <section class="container">
-    <h2>Bestsellers</h2>
-    <div class="grid" id="bestGrid"></div>
+  <!-- Bestsellers Section -->
+  <section class="bestsellers">
+    <div class="container">
+      <div class="section-header">
+        <h2>Bestsellers</h2>
+        <p class="section-subtitle">Our most loved fragrances, handpicked for you</p>
+      </div>
+      <div class="grid" id="bestGrid">
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Loading bestsellers...</p>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- Bundles Section -->
@@ -384,11 +395,15 @@
     
     function renderBestsellers() {
       try {
+        console.log('renderBestsellers called');
+        
         const bestGrid = document.getElementById('bestGrid');
         if (!bestGrid) {
           console.error('Bestsellers grid element not found');
           return;
         }
+        
+        console.log('bestGrid found:', bestGrid);
         
         // Check if PRODUCTS data is available
         if (typeof PRODUCTS === 'undefined' || !PRODUCTS || PRODUCTS.length === 0) {
@@ -396,6 +411,9 @@
           setTimeout(renderBestsellers, 100);
           return;
         }
+        
+        console.log('PRODUCTS available:', PRODUCTS.length, 'products');
+        console.log('Featured products:', PRODUCTS.filter(p => p.featured).map(p => p.name));
         
         // Get featured products and limit to 3
         let featuredProducts = PRODUCTS.filter(p => p.featured).slice(0, 3);
@@ -417,9 +435,46 @@
           return;
         }
         
-        bestGrid.innerHTML = featuredProducts.map(card).join('');
+        console.log('Final featured products:', featuredProducts.map(p => p.name));
         
-        console.log(`Rendered ${featuredProducts.length} bestsellers:`, featuredProducts.map(p => p.name));
+        // Check if required functions exist
+        if (typeof renderStars !== 'function') {
+          console.error('renderStars function not found');
+          bestGrid.innerHTML = '<p class="muted">Error: Missing required functions. Please refresh the page.</p>';
+          return;
+        }
+        
+        if (typeof formatPrice !== 'function') {
+          console.error('formatPrice function not found');
+          bestGrid.innerHTML = '<p class="muted">Error: Missing required functions. Please refresh the page.</p>';
+          return;
+        }
+        
+        // Try to render with the card function first
+        try {
+          bestGrid.innerHTML = featuredProducts.map(card).join('');
+        } catch (cardError) {
+          console.warn('Card function failed, using fallback rendering:', cardError);
+          // Fallback: simple HTML rendering
+          bestGrid.innerHTML = featuredProducts.map(p => `
+            <article class="card">
+              <picture>
+                <source type="image/webp" srcset="${p.imageWebp || p.image}">
+                <img src="${p.image}" alt="${p.name} bottle" loading="lazy" width="300" height="300">
+              </picture>
+              <div class="pad">
+                <h3>${p.name}</h3>
+                <div class="meta">${(p.notes || []).slice(0, 3).join(' • ')}</div>
+                <div class="price">AED ${p.price}</div>
+                <div class="actions">
+                  <button class="btn" onclick="addToCart('${p.id}')">Add to cart</button>
+                </div>
+              </div>
+            </article>
+          `).join('');
+        }
+        
+        console.log(`Successfully rendered ${featuredProducts.length} bestsellers:`, featuredProducts.map(p => p.name));
         
       } catch (error) {
         console.error('Error rendering bestsellers:', error);

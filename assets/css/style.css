@@ -175,6 +175,76 @@ form input.error,form textarea.error{border-color:var(--error)}
 
 /* Quiz Section */
 /* ============================================================================
+   BESTSELLERS SECTION
+   ============================================================================ */
+.bestsellers {
+  padding: 80px 0;
+  background: var(--bg);
+  position: relative;
+}
+
+.bestsellers::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(201,162,74,0.02) 0%, rgba(201,162,74,0.01) 100%);
+  pointer-events: none;
+}
+
+.bestsellers .container {
+  position: relative;
+  z-index: 1;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.section-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem;
+  font-weight: 600;
+  margin: 0 0 20px;
+  color: var(--gold);
+  text-shadow: 0 2px 20px rgba(201,162,74,0.3);
+  letter-spacing: -0.02em;
+}
+
+  .section-subtitle {
+    font-size: 1.1rem;
+    color: var(--muted);
+    margin: 0;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+  
+  .loading-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+  
+  .loading-state .spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+  }
+  
+  .loading-state p {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 300;
+  }
+
+/* ============================================================================
    QUIZ SECTION - Modern & Classy Design
    ============================================================================ */
 .quiz {
@@ -531,6 +601,20 @@ form input.error,form textarea.error{border-color:var(--error)}
     /* Mobile cart drawer */
   #cart-drawer { width: 100vw; right: -100vw; }
   #cart-drawer.open { right: 0; }
+  
+  /* Mobile bestsellers */
+  .bestsellers {
+    padding: 60px 0;
+  }
+  
+  .section-header h2 {
+    font-size: 2.5rem;
+  }
+  
+  .section-subtitle {
+    font-size: 1rem;
+    margin-bottom: 32px;
+  }
   
   /* Mobile quiz */
   .quiz {
