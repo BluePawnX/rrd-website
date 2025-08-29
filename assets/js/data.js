@@ -180,6 +180,15 @@ window.QUIZ_QUESTIONS = QUIZ_QUESTIONS;
 window.CATEGORIES = CATEGORIES;
 window.PRICE_RANGES = PRICE_RANGES;
 
+// Verify global scope
+console.log('Global scope verification:');
+console.log('window.PRODUCTS:', window.PRODUCTS);
+console.log('window.REVIEWS:', window.REVIEWS);
+console.log('window.BUNDLES:', window.BUNDLES);
+console.log('window.QUIZ_QUESTIONS:', window.QUIZ_QUESTIONS);
+console.log('window.CATEGORIES:', window.CATEGORIES);
+console.log('window.PRICE_RANGES:', window.PRICE_RANGES);
+
 // Make utility functions available globally
 window.avgRating = avgRating;
 window.reviewsCount = reviewsCount;
@@ -192,6 +201,24 @@ window.getQuizRecommendation = getQuizRecommendation;
 window.CURRENCY_SYMBOLS = CURRENCY_SYMBOLS;
 window.RATES = RATES;
 window.DEFAULT_CURRENCY = DEFAULT_CURRENCY;
+
+// ============================================================================
+// IMMEDIATE VERIFICATION
+// ============================================================================
+
+// Verify data is loaded immediately
+console.log('=== RRD Collection Data Verification ===');
+console.log('PRODUCTS loaded:', PRODUCTS ? PRODUCTS.length : 'undefined');
+console.log('REVIEWS loaded:', REVIEWS ? Object.keys(REVIEWS).length : 'undefined');
+console.log('BUNDLES loaded:', BUNDLES ? BUNDLES.length : 'undefined');
+console.log('QUIZ_QUESTIONS loaded:', QUIZ_QUESTIONS ? QUIZ_QUESTIONS.length : 'undefined');
+
+if (PRODUCTS && PRODUCTS.length > 0) {
+  console.log('Sample product:', PRODUCTS[0]);
+  console.log('Featured products:', PRODUCTS.filter(p => p.featured).map(p => p.name));
+} else {
+  console.error('PRODUCTS array is empty or undefined!');
+}
 
 // ============================================================================
 // INITIALIZATION
