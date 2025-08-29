@@ -341,7 +341,7 @@
           
           if (typeof PRODUCTS !== 'undefined' && PRODUCTS && PRODUCTS.length > 0) {
             console.log('PRODUCTS data found, rendering bestsellers...');
-            renderBestsellers();
+            window.renderBestsellers();
           } else if (retryCount < maxRetries) {
             retryCount++;
             console.log(`Retrying bestsellers render (${retryCount}/${maxRetries})...`);
@@ -361,8 +361,54 @@
         // Also try to render immediately if data is already available
         if (typeof PRODUCTS !== 'undefined' && PRODUCTS && PRODUCTS.length > 0) {
           console.log('PRODUCTS already available, rendering immediately');
-          renderBestsellers();
+          window.renderBestsellers();
         }
+        
+        // Listen for data loaded event
+        document.addEventListener('data:loaded', () => {
+          console.log('Data loaded event received, rendering bestsellers...');
+          window.renderBestsellers();
+        });
+        
+        // Fallback: if data doesn't load after 5 seconds, show a message
+        setTimeout(() => {
+          if (typeof PRODUCTS === 'undefined' || !PRODUCTS || PRODUCTS.length === 0) {
+            console.error('PRODUCTS still not available after 5 seconds');
+            const bestGrid = document.getElementById('bestGrid');
+            if (bestGrid) {
+              bestGrid.innerHTML = '<p class="muted">Data loading timeout. Please check your connection and refresh the page.</p>';
+            }
+          }
+        }, 5000);
+        
+        // Additional check: verify all required scripts loaded
+        const requiredScripts = ['data.js', 'ui.js', 'cart.js'];
+        const missingScripts = requiredScripts.filter(script => {
+          const scriptElement = document.querySelector(`script[src*="${script}"]`);
+          return !scriptElement || scriptElement.dataset.loaded !== 'true';
+        });
+        
+        if (missingScripts.length > 0) {
+          console.error('Missing or failed scripts:', missingScripts);
+          const bestGrid = document.getElementById('bestGrid');
+          if (bestGrid) {
+            bestGrid.innerHTML = '<p class="muted">Script loading error. Please refresh the page.</p>';
+          }
+        }
+        
+        // Force data loading check every 500ms for the first 10 seconds
+        let forceCheckCount = 0;
+        const forceCheckInterval = setInterval(() => {
+          forceCheckCount++;
+          if (typeof PRODUCTS !== 'undefined' && PRODUCTS && PRODUCTS.length > 0) {
+            console.log('PRODUCTS found during force check, rendering...');
+            clearInterval(forceCheckInterval);
+            window.renderBestsellers();
+          } else if (forceCheckCount >= 20) { // 10 seconds
+            clearInterval(forceCheckInterval);
+            console.error('Force check failed after 10 seconds');
+          }
+        }, 500);
         
         // Bind events
         document.addEventListener('cart:updated', () => {
@@ -400,7 +446,8 @@
         </div>
       </article>`; }
     
-    function renderBestsellers() {
+    // Global renderBestsellers function
+    window.renderBestsellers = function() {
       try {
         console.log('renderBestsellers called');
         
@@ -415,7 +462,7 @@
         // Check if PRODUCTS data is available
         if (typeof PRODUCTS === 'undefined' || !PRODUCTS || PRODUCTS.length === 0) {
           console.warn('PRODUCTS data not available yet, retrying in 100ms...');
-          setTimeout(renderBestsellers, 100);
+          setTimeout(window.renderBestsellers, 100);
           return;
         }
         
@@ -490,7 +537,7 @@
           bestGrid.innerHTML = '<p class="muted">Error loading bestsellers. Please refresh the page.</p>';
         }
       }
-    }
+    };
     
     // Initialize when DOM is ready
     if (document.readyState === 'loading') {
