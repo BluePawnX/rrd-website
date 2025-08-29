@@ -330,7 +330,7 @@
         
         // Render bestsellers with retry logic
         let retryCount = 0;
-        const maxRetries = 10;
+        const maxRetries = 20; // Increased retries
         
         function tryRenderBestsellers() {
           console.log('Checking for PRODUCTS data...', {
@@ -345,7 +345,7 @@
           } else if (retryCount < maxRetries) {
             retryCount++;
             console.log(`Retrying bestsellers render (${retryCount}/${maxRetries})...`);
-            setTimeout(tryRenderBestsellers, 200);
+            setTimeout(tryRenderBestsellers, 100); // Faster retry
           } else {
             console.error('Failed to load PRODUCTS data after maximum retries');
             const bestGrid = document.getElementById('bestGrid');
@@ -355,7 +355,14 @@
           }
         }
         
+        // Start retry logic
         tryRenderBestsellers();
+        
+        // Also try to render immediately if data is already available
+        if (typeof PRODUCTS !== 'undefined' && PRODUCTS && PRODUCTS.length > 0) {
+          console.log('PRODUCTS already available, rendering immediately');
+          renderBestsellers();
+        }
         
         // Bind events
         document.addEventListener('cart:updated', () => {

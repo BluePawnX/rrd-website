@@ -101,7 +101,12 @@
     </div>
   </div>
 
-  <div class="grid" id="shopGrid"></div>
+  <div class="grid" id="shopGrid">
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading products...</p>
+    </div>
+  </div>
   <p id="emptyMsg" class="muted" style="display:none;margin-top:16px">No perfumes match your search.</p>
 </main>
 
@@ -141,6 +146,17 @@
     isInitialized = true;
     
     try {
+      console.log('Initializing shop...');
+      
+      // Check if required data is available
+      if (typeof PRODUCTS === 'undefined' || !PRODUCTS || PRODUCTS.length === 0) {
+        console.warn('PRODUCTS not available, retrying in 200ms...');
+        setTimeout(initializeShop, 200);
+        return;
+      }
+      
+      console.log('PRODUCTS available:', PRODUCTS.length, 'products');
+      
       // Initialize currency selectors
       const currencySelectors = ['currencySel', 'currencyTop'];
       currencySelectors.forEach(id => {
@@ -341,6 +357,12 @@
   } else {
     initializeShop();
   }
+  
+  // Also listen for when data.js finishes loading
+  document.addEventListener('data:loaded', () => {
+    console.log('Data loaded event received in shop, initializing...');
+    initializeShop();
+  });
   
   // Make functions globally available
   window.openPDP = openPDP;
