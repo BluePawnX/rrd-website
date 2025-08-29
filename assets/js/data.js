@@ -217,4 +217,15 @@ document.addEventListener('DOMContentLoaded', function() {
       featuredCount: PRODUCTS.filter(p => p.featured).length 
     } 
   }));
+  
+  // Also dispatch immediately if DOM is already ready
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    console.log('DOM already ready, dispatching data:loaded event immediately');
+    document.dispatchEvent(new CustomEvent('data:loaded', { 
+      detail: { 
+        productCount: PRODUCTS.length,
+        featuredCount: PRODUCTS.filter(p => p.featured).length 
+      } 
+    }));
+  }
 }); 
